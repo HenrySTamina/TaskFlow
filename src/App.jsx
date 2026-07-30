@@ -24,6 +24,7 @@ function App() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
   const [editingTask, setEditingTask] = useState(null)
   const [taskToDelete, setTaskToDelete] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
   const [tasks, setTasks] = useState(getStoredTasks)
 
   useEffect(() => {
@@ -113,13 +114,19 @@ function App() {
       />
 
       <div className="lg:pl-72">
-        <Navbar onOpenMenu={openSidebar} />
+        <Navbar
+          searchTerm={searchTerm}
+          onOpenMenu={openSidebar}
+          onSearchChange={setSearchTerm}
+        />
         <Dashboard
           tasks={tasks}
+          searchTerm={searchTerm}
           onCreateTask={openTaskModal}
           onEditTask={openEditTask}
           onDeleteTask={requestDeleteTask}
           onToggleTask={toggleTaskStatus}
+          onSearchChange={setSearchTerm}
         />
       </div>
 
