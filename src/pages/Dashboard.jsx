@@ -4,8 +4,11 @@ import {
   ClipboardList,
   Clock3,
   MoreHorizontal,
+  Pencil,
   Plus,
+  Trash2,
 } from 'lucide-react'
+import { useState } from 'react'
 
 import StatCard from '../components/ui/StatCard'
 
@@ -59,7 +62,14 @@ function getStatusClass(status) {
   return classes[status] ?? 'bg-slate-100 text-slate-700'
 }
 
-function Dashboard({ tasks, onCreateTask }) {
+function Dashboard({
+  tasks,
+  onCreateTask,
+  onEditTask,
+  onDeleteTask,
+  onToggleTask,
+}) {
+  const [openMenuId, setOpenMenuId] = useState(null)
   const completedTasks = tasks.filter(
     (task) => task.status === 'Completada',
   ).length
@@ -140,7 +150,7 @@ function Dashboard({ tasks, onCreateTask }) {
       </section>
 
       <section className="mt-8 grid gap-6 xl:grid-cols-[1fr_340px]">
-        <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <article className="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-100 p-5">
             <div>
               <h3 className="font-bold text-slate-900">
@@ -169,12 +179,27 @@ function Dashboard({ tasks, onCreateTask }) {
                 >
                   <button
                     type="button"
+                    onClick={() => onToggleTask(task.id)}
                     aria-label={`Completar ${task.title}`}
-                    className="h-5 w-5 shrink-0 rounded-full border-2 border-slate-300 hover:border-indigo-500"
-                  />
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition ${
+                      task.status === 'Completada'
+                        ? 'text-emerald-600'
+                        : 'border-2 border-slate-300 hover:border-indigo-500'
+                    }`}
+                  >
+                    {task.status === 'Completada' && (
+                      <CheckCircle2 size={23} />
+                    )}
+                  </button>
 
                   <div className="min-w-0 flex-1">
-                    <h4 className="truncate font-semibold text-slate-800">
+                    <h4
+                      className={`truncate font-semibold ${
+                        task.status === 'Completada'
+                          ? 'text-slate-400 line-through'
+                          : 'text-slate-800'
+                      }`}
+                    >
                       {task.title}
                     </h4>
 
@@ -202,13 +227,47 @@ function Dashboard({ tasks, onCreateTask }) {
                       {task.status}
                     </span>
 
-                    <button
-                      type="button"
-                      aria-label={`Opciones de ${task.title}`}
-                      className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-                    >
-                      <MoreHorizontal size={18} />
-                    </button>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setOpenMenuId(
+                          openMenuId === task.id ? null : task.id,
+                        )}
+                        aria-label={`Opciones de ${task.title}`}
+                        aria-expanded={openMenuId === task.id}
+                        className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                      >
+                        <MoreHorizontal size={18} />
+                      </button>
+
+                      {openMenuId === task.id && (
+                        <div className="absolute right-0 top-10 z-20 w-40 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onEditTask(task)
+                              setOpenMenuId(null)
+                            }}
+                            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                          >
+                            <Pencil size={16} />
+                            Editar
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onDeleteTask(task)
+                              setOpenMenuId(null)
+                            }}
+                            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 size={16} />
+                            Eliminar
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

@@ -1,17 +1,20 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
 
-const initialFormData = {
-  title: '',
-  description: '',
-  priority: 'Media',
-  status: 'Pendiente',
-  dueDate: '',
+function getInitialFormData(task) {
+  return {
+    title: task?.title ?? '',
+    description: task?.description ?? '',
+    priority: task?.priority ?? 'Media',
+    status: task?.status ?? 'Pendiente',
+    dueDate: task?.dueDate ?? '',
+  }
 }
 
-function TaskModal({ onClose, onSubmit }) {
-  const [formData, setFormData] = useState(initialFormData)
+function TaskModal({ task, onClose, onSubmit }) {
+  const [formData, setFormData] = useState(() => getInitialFormData(task))
   const [titleError, setTitleError] = useState('')
+  const isEditing = Boolean(task)
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -64,11 +67,13 @@ function TaskModal({ onClose, onSubmit }) {
               id="task-modal-title"
               className="text-xl font-bold text-slate-900"
             >
-              Crear nueva tarea
+              {isEditing ? 'Editar tarea' : 'Crear nueva tarea'}
             </h2>
 
             <p className="mt-1 text-sm text-slate-500">
-              Agrega la información necesaria para organizar tu actividad.
+              {isEditing
+                ? 'Actualiza la información de tu actividad.'
+                : 'Agrega la información necesaria para organizar tu actividad.'}
             </p>
           </div>
 
@@ -155,6 +160,7 @@ function TaskModal({ onClose, onSubmit }) {
               >
                 <option>Pendiente</option>
                 <option>En progreso</option>
+                {isEditing && <option>Completada</option>}
               </select>
             </label>
           </div>
@@ -186,7 +192,7 @@ function TaskModal({ onClose, onSubmit }) {
               type="submit"
               className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
             >
-              Guardar tarea
+              {isEditing ? 'Guardar cambios' : 'Guardar tarea'}
             </button>
           </footer>
         </form>
