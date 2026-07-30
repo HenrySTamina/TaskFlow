@@ -1,8 +1,12 @@
 import { Bell, Menu, Search } from 'lucide-react'
 
-function Navbar({ onOpenMenu }) {
+function Navbar({
+  searchTerm,
+  onOpenMenu,
+  onSearchChange,
+}) {
   return (
-    <header className="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-20 flex min-h-20 flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -25,13 +29,15 @@ function Navbar({ onOpenMenu }) {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
-        <label className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 md:flex">
+        <label className="order-3 flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 md:order-none md:w-auto">
           <Search size={18} className="text-slate-400" />
 
           <input
             type="search"
+            value={searchTerm}
+            onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Buscar tareas..."
-            className="w-48 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+            className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400 md:w-48"
           />
         </label>
 

@@ -6,10 +6,12 @@ import {
   MoreHorizontal,
   Pencil,
   Plus,
+  SearchX,
   Trash2,
 } from 'lucide-react'
 import { useState } from 'react'
 
+import TaskFilters from '../components/tasks/TaskFilters'
 import StatCard from '../components/ui/StatCard'
 
 function getCurrentDate() {
@@ -64,12 +66,16 @@ function getStatusClass(status) {
 
 function Dashboard({
   tasks,
+  searchTerm,
   onCreateTask,
   onEditTask,
   onDeleteTask,
   onToggleTask,
+  onSearchChange,
 }) {
   const [openMenuId, setOpenMenuId] = useState(null)
+  const [statusFilter, setStatusFilter] = useState('Todas')
+  const [priorityFilter, setPriorityFilter] = useState('Todas')
   const completedTasks = tasks.filter(
     (task) => task.status === 'Completada',
   ).length
@@ -81,6 +87,31 @@ function Dashboard({
     ? Math.round((completedTasks / tasks.length) * 100)
     : 0
   const progressDegrees = completionPercentage * 3.6
+  const normalizedSearch = searchTerm.trim().toLocaleLowerCase('es-MX')
+  const hasActiveFilters = Boolean(
+    normalizedSearch
+    || statusFilter !== 'Todas'
+    || priorityFilter !== 'Todas',
+  )
+
+  const filteredTasks = tasks.filter((task) => {
+    const searchableText = `${task.title} ${task.description ?? ''}`
+      .toLocaleLowerCase('es-MX')
+    const matchesSearch = !normalizedSearch
+      || searchableText.includes(normalizedSearch)
+    const matchesStatus = statusFilter === 'Todas'
+      || task.status === statusFilter
+    const matchesPriority = priorityFilter === 'Todas'
+      || task.priority === priorityFilter
+
+    return matchesSearch && matchesStatus && matchesPriority
+  })
+
+  function clearFilters() {
+    onSearchChange('')
+    setStatusFilter('Todas')
+    setPriorityFilter('Todas')
+  }
 
   const statistics = [
     {
@@ -158,21 +189,25 @@ function Dashboard({
               </h3>
 
               <p className="mt-1 text-sm text-slate-500">
-                Actividades próximas a realizar
+                {hasActiveFilters
+                  ? `${filteredTasks.length} resultado${filteredTasks.length === 1 ? '' : 's'}`
+                  : 'Actividades próximas a realizar'}
               </p>
             </div>
-
-            <button
-              type="button"
-              className="text-sm font-semibold text-indigo-600 hover:text-indigo-700"
-            >
-              Ver todas
-            </button>
           </div>
 
-          {tasks.length ? (
+          <TaskFilters
+            status={statusFilter}
+            priority={priorityFilter}
+            hasActiveFilters={hasActiveFilters}
+            onStatusChange={setStatusFilter}
+            onPriorityChange={setPriorityFilter}
+            onClear={clearFilters}
+          />
+
+          {filteredTasks.length ? (
             <div className="divide-y divide-slate-100">
-              {tasks.slice(0, 6).map((task) => (
+              {filteredTasks.map((task) => (
                 <div
                   key={task.id}
                   className="flex flex-col gap-4 p-5 transition hover:bg-slate-50 sm:flex-row sm:items-center"
@@ -275,23 +310,29 @@ function Dashboard({
           ) : (
             <div className="flex flex-col items-center px-5 py-12 text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
-                <ClipboardList size={26} />
+                {hasActiveFilters
+                  ? <SearchX size={26} />
+                  : <ClipboardList size={26} />}
               </div>
 
               <h4 className="mt-4 font-bold text-slate-800">
-                Aún no tienes tareas
+                {hasActiveFilters
+                  ? 'No encontramos coincidencias'
+                  : 'Aún no tienes tareas'}
               </h4>
 
               <p className="mt-2 max-w-sm text-sm text-slate-500">
-                Crea tu primera tarea para comenzar a organizar tus actividades.
+                {hasActiveFilters
+                  ? 'Prueba otra búsqueda o limpia los filtros seleccionados.'
+                  : 'Crea tu primera tarea para comenzar a organizar tus actividades.'}
               </p>
 
               <button
                 type="button"
-                onClick={onCreateTask}
+                onClick={hasActiveFilters ? clearFilters : onCreateTask}
                 className="mt-5 text-sm font-semibold text-indigo-600 hover:text-indigo-700"
               >
-                Crear primera tarea
+                {hasActiveFilters ? 'Limpiar filtros' : 'Crear primera tarea'}
               </button>
             </div>
           )}
