@@ -3,6 +3,8 @@ import express from 'express'
 import { basename } from 'node:path'
 
 import { databasePath } from './database.js'
+import errorHandler from './middleware/error-handler.js'
+import taskRouter from './routes/task.routes.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -26,11 +28,15 @@ app.get('/api/health', (request, response) => {
   })
 })
 
+app.use('/api/tasks', taskRouter)
+
 app.use((request, response) => {
   response.status(404).json({
     message: 'Ruta no encontrada',
   })
 })
+
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log(`TaskFlow API disponible en http://localhost:${PORT}`)
