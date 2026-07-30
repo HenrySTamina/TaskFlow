@@ -1,5 +1,8 @@
 import cors from 'cors'
 import express from 'express'
+import { basename } from 'node:path'
+
+import { databasePath } from './database.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -14,6 +17,11 @@ app.get('/api/health', (request, response) => {
   response.status(200).json({
     status: 'ok',
     message: 'TaskFlow API funcionando correctamente',
+    database: {
+      status: 'connected',
+      engine: 'SQLite',
+      file: basename(databasePath),
+    },
     timestamp: new Date().toISOString(),
   })
 })
