@@ -5,20 +5,12 @@ import Sidebar from './components/layout/Sidebar'
 import DeleteTaskModal from './components/tasks/DeleteTaskModal'
 import TaskModal from './components/tasks/TaskModal'
 import Dashboard from './pages/Dashboard'
-import { createTask, getTasks } from './services/taskApi'
-
-const TASKS_STORAGE_KEY = 'taskflow_tasks'
-
-function getStoredTasks() {
-  try {
-    const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY)
-    const parsedTasks = storedTasks ? JSON.parse(storedTasks) : []
-
-    return Array.isArray(parsedTasks) ? parsedTasks : []
-  } catch {
-    return []
-  }
-}
+import { createTask } from './services/taskApi'
+import {
+  getStoredTasks,
+  loadInitialTasks,
+  TASKS_STORAGE_KEY,
+} from './services/taskMigration'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -31,22 +23,19 @@ function App() {
   useEffect(() => {
     let isActive = true
 
-    async function loadTasksFromApi() {
+    async function synchronizeTasks() {
       try {
-        const apiTasks = await getTasks()
+        const initialTasks = await loadInitialTasks()
 
-        if (isActive && apiTasks.length > 0) {
-          setTasks(apiTasks.map((task) => ({
-            ...task,
-            project: 'TaskFlow',
-          })))
+        if (isActive) {
+          setTasks(initialTasks)
         }
       } catch (error) {
-        console.error('No se pudieron cargar las tareas desde la API.', error)
+        console.error('No se pudieron sincronizar las tareas.', error)
       }
     }
 
-    loadTasksFromApi()
+    synchronizeTasks()
 
     return () => {
       isActive = false
