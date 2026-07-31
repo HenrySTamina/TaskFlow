@@ -5,7 +5,11 @@ import Sidebar from './components/layout/Sidebar'
 import DeleteTaskModal from './components/tasks/DeleteTaskModal'
 import TaskModal from './components/tasks/TaskModal'
 import Dashboard from './pages/Dashboard'
-import { createTask, updateTask } from './services/taskApi'
+import {
+  createTask,
+  deleteTask,
+  updateTask,
+} from './services/taskApi'
 import {
   getStoredTasks,
   loadInitialTasks,
@@ -137,12 +141,23 @@ function App() {
     setTaskToDelete(null)
   }
 
-  function confirmDeleteTask() {
+  async function confirmDeleteTask() {
+  if (!taskToDelete) {
+    return
+  }
+
+  try {
+    await deleteTask(taskToDelete.id)
+
     setTasks((currentTasks) => currentTasks.filter(
       (task) => task.id !== taskToDelete.id,
     ))
+
     setTaskToDelete(null)
+  } catch (error) {
+    console.error('No se pudo eliminar la tarea de la API.', error)
   }
+}
 
   return (
     <div className="min-h-screen bg-slate-100">
