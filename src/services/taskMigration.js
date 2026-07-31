@@ -43,8 +43,9 @@ async function synchronizeInitialTasks() {
   const storedTasks = getStoredTasks()
 
   if (storedTasks.length === 0) {
-    return []
-  }
+  localStorage.removeItem(TASKS_STORAGE_KEY)
+  return []
+}
 
   const migratedTasks = []
 

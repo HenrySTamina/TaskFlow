@@ -10,11 +10,7 @@ import {
   deleteTask,
   updateTask,
 } from './services/taskApi'
-import {
-  getStoredTasks,
-  loadInitialTasks,
-  TASKS_STORAGE_KEY,
-} from './services/taskMigration'
+import { loadInitialTasks } from './services/taskMigration'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -22,7 +18,7 @@ function App() {
   const [editingTask, setEditingTask] = useState(null)
   const [taskToDelete, setTaskToDelete] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [tasks, setTasks] = useState(getStoredTasks)
+  const [tasks, setTasks] = useState([])
 
   useEffect(() => {
     let isActive = true
@@ -45,10 +41,6 @@ function App() {
       isActive = false
     }
   }, [])
-
-  useEffect(() => {
-    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks))
-  }, [tasks])
 
   function openSidebar() {
     setIsSidebarOpen(true)
