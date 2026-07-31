@@ -5,7 +5,7 @@ import Sidebar from './components/layout/Sidebar'
 import DeleteTaskModal from './components/tasks/DeleteTaskModal'
 import TaskModal from './components/tasks/TaskModal'
 import Dashboard from './pages/Dashboard'
-import { getTasks } from './services/taskApi'
+import { createTask, getTasks } from './services/taskApi'
 
 const TASKS_STORAGE_KEY = 'taskflow_tasks'
 
@@ -28,31 +28,34 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('')
   const [tasks, setTasks] = useState(getStoredTasks)
 
-useEffect(() => {
-  let isActive = true
+  useEffect(() => {
+    let isActive = true
 
-  async function loadTasksFromApi() {
-    try {
-      const apiTasks = await getTasks()
+    async function loadTasksFromApi() {
+      try {
+        const apiTasks = await getTasks()
 
-      if (isActive && apiTasks.length > 0) {
-        setTasks(apiTasks)
+        if (isActive && apiTasks.length > 0) {
+          setTasks(apiTasks.map((task) => ({
+            ...task,
+            project: 'TaskFlow',
+          })))
+        }
+      } catch (error) {
+        console.error('No se pudieron cargar las tareas desde la API.', error)
       }
-    } catch (error) {
-      console.error('No se pudieron cargar las tareas desde la API.', error)
     }
-  }
 
-  loadTasksFromApi()
+    loadTasksFromApi()
 
-  return () => {
-    isActive = false
-  }
-}, [])
+    return () => {
+      isActive = false
+    }
+  }, [])
 
-useEffect(() => {
-  localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks))
-}, [tasks])
+  useEffect(() => {
+    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks))
+  }, [tasks])
 
   function openSidebar() {
     setIsSidebarOpen(true)
@@ -77,29 +80,34 @@ useEffect(() => {
     setIsTaskModalOpen(true)
   }
 
-  function saveTask(taskData) {
-    if (editingTask) {
-      setTasks((currentTasks) => currentTasks.map((task) => (
-        task.id === editingTask.id
-          ? {
-              ...task,
-              ...taskData,
-              updatedAt: new Date().toISOString(),
-            }
-          : task
-      )))
-    } else {
-      const newTask = {
-        ...taskData,
-        id: globalThis.crypto?.randomUUID?.() ?? `${Date.now()}`,
-        project: 'TaskFlow',
-        createdAt: new Date().toISOString(),
+  async function saveTask(taskData) {
+    try {
+      if (editingTask) {
+        setTasks((currentTasks) => currentTasks.map((task) => (
+          task.id === editingTask.id
+            ? {
+                ...task,
+                ...taskData,
+                updatedAt: new Date().toISOString(),
+              }
+            : task
+        )))
+      } else {
+        const createdTask = await createTask(taskData)
+
+        setTasks((currentTasks) => [
+          {
+            ...createdTask,
+            project: 'TaskFlow',
+          },
+          ...currentTasks,
+        ])
       }
 
-      setTasks((currentTasks) => [newTask, ...currentTasks])
+      closeTaskModal()
+    } catch (error) {
+      console.error('No se pudo guardar la tarea en la API.', error)
     }
-
-    closeTaskModal()
   }
 
   function toggleTaskStatus(taskId) {
@@ -142,6 +150,7 @@ useEffect(() => {
           onOpenMenu={openSidebar}
           onSearchChange={setSearchTerm}
         />
+
         <Dashboard
           tasks={tasks}
           searchTerm={searchTerm}
