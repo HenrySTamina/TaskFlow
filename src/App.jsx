@@ -5,7 +5,7 @@ import Sidebar from './components/layout/Sidebar'
 import DeleteTaskModal from './components/tasks/DeleteTaskModal'
 import TaskModal from './components/tasks/TaskModal'
 import Dashboard from './pages/Dashboard'
-import { createTask } from './services/taskApi'
+import { createTask, updateTask } from './services/taskApi'
 import {
   getStoredTasks,
   loadInitialTasks,
@@ -72,12 +72,13 @@ function App() {
   async function saveTask(taskData) {
     try {
       if (editingTask) {
+        const updatedTask = await updateTask(editingTask.id, taskData)
+
         setTasks((currentTasks) => currentTasks.map((task) => (
           task.id === editingTask.id
             ? {
-                ...task,
-                ...taskData,
-                updatedAt: new Date().toISOString(),
+                ...updatedTask,
+                project: 'TaskFlow',
               }
             : task
         )))
@@ -99,16 +100,33 @@ function App() {
     }
   }
 
-  function toggleTaskStatus(taskId) {
-    setTasks((currentTasks) => currentTasks.map((task) => (
-      task.id === taskId
-        ? {
-            ...task,
-            status: task.status === 'Completada' ? 'Pendiente' : 'Completada',
-            updatedAt: new Date().toISOString(),
-          }
-        : task
-    )))
+  async function toggleTaskStatus(taskId) {
+    const selectedTask = tasks.find((task) => task.id === taskId)
+
+    if (!selectedTask) {
+      return
+    }
+
+    const newStatus = selectedTask.status === 'Completada'
+      ? 'Pendiente'
+      : 'Completada'
+
+    try {
+      const updatedTask = await updateTask(taskId, {
+        status: newStatus,
+      })
+
+      setTasks((currentTasks) => currentTasks.map((task) => (
+        task.id === taskId
+          ? {
+              ...updatedTask,
+              project: 'TaskFlow',
+            }
+          : task
+      )))
+    } catch (error) {
+      console.error('No se pudo actualizar el estado de la tarea.', error)
+    }
   }
 
   function requestDeleteTask(task) {
