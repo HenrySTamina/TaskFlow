@@ -5,6 +5,7 @@ import Sidebar from './components/layout/Sidebar'
 import DeleteTaskModal from './components/tasks/DeleteTaskModal'
 import TaskModal from './components/tasks/TaskModal'
 import Dashboard from './pages/Dashboard'
+import { getTasks } from './services/taskApi'
 
 const TASKS_STORAGE_KEY = 'taskflow_tasks'
 
@@ -27,9 +28,31 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('')
   const [tasks, setTasks] = useState(getStoredTasks)
 
-  useEffect(() => {
-    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks))
-  }, [tasks])
+useEffect(() => {
+  let isActive = true
+
+  async function loadTasksFromApi() {
+    try {
+      const apiTasks = await getTasks()
+
+      if (isActive && apiTasks.length > 0) {
+        setTasks(apiTasks)
+      }
+    } catch (error) {
+      console.error('No se pudieron cargar las tareas desde la API.', error)
+    }
+  }
+
+  loadTasksFromApi()
+
+  return () => {
+    isActive = false
+  }
+}, [])
+
+useEffect(() => {
+  localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks))
+}, [tasks])
 
   function openSidebar() {
     setIsSidebarOpen(true)
