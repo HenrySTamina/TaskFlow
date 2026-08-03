@@ -19,6 +19,7 @@ function App() {
   const [editingTask, setEditingTask] = useState(null)
   const [taskToDelete, setTaskToDelete] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [activeView, setActiveView] = useState('summary')
   const [tasks, setTasks] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [apiError, setApiError] = useState('')
@@ -184,8 +185,10 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-100">
       <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={closeSidebar}
+  isOpen={isSidebarOpen}
+  activeView={activeView}
+  onClose={closeSidebar}
+  onNavigate={setActiveView}
       />
 
       <div className="lg:pl-72">
