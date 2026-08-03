@@ -205,7 +205,8 @@ function App() {
         />
 
         <Dashboard
-          tasks={tasks}
+  viewMode={activeView}
+  tasks={tasks}
           searchTerm={searchTerm}
           onCreateTask={openTaskModal}
           onEditTask={openEditTask}

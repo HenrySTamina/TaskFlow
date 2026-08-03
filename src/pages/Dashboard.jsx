@@ -65,6 +65,7 @@ function getStatusClass(status) {
 }
 
 function Dashboard({
+  viewMode = 'summary',
   tasks,
   searchTerm,
   onCreateTask,
@@ -76,6 +77,7 @@ function Dashboard({
   const [openMenuId, setOpenMenuId] = useState(null)
   const [statusFilter, setStatusFilter] = useState('Todas')
   const [priorityFilter, setPriorityFilter] = useState('Todas')
+  const isTaskView = viewMode === 'tasks'
   const completedTasks = tasks.filter(
     (task) => task.status === 'Completada',
   ).length
@@ -149,16 +151,18 @@ function Dashboard({
       <section className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <p className="text-sm font-medium capitalize text-indigo-600">
-            {getCurrentDate()}
-          </p>
+  {isTaskView ? 'Gestión de actividades' : getCurrentDate()}
+</p>
 
-          <h2 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
-            Hola, Henry 👋
-          </h2>
+<h2 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
+  {isTaskView ? 'Mis tareas' : 'Hola, Henry 👋'}
+</h2>
 
-          <p className="mt-2 text-slate-500">
-            Aquí tienes un resumen de tus actividades.
-          </p>
+<p className="mt-2 text-slate-500">
+  {isTaskView
+    ? 'Consulta, filtra y administra todas tus tareas.'
+    : 'Aquí tienes un resumen de tus actividades.'}
+</p>
         </div>
 
         <button
@@ -171,7 +175,9 @@ function Dashboard({
         </button>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section
+  className={`${isTaskView ? 'hidden' : 'grid'} gap-4 sm:grid-cols-2 xl:grid-cols-4`}
+>
         {statistics.map((statistic) => (
           <StatCard
             key={statistic.title}
@@ -180,12 +186,18 @@ function Dashboard({
         ))}
       </section>
 
-      <section className="mt-8 grid gap-6 xl:grid-cols-[1fr_340px]">
+      <section
+  className={
+    isTaskView
+      ? 'grid gap-6'
+      : 'mt-8 grid gap-6 xl:grid-cols-[1fr_340px]'
+  }
+>
         <article className="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-100 p-5">
             <div>
               <h3 className="font-bold text-slate-900">
-                Tareas recientes
+                {isTaskView ? 'Todas las tareas' : 'Tareas recientes'}
               </h3>
 
               <p className="mt-1 text-sm text-slate-500">
@@ -338,7 +350,9 @@ function Dashboard({
           )}
         </article>
 
-        <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <article
+  className={`${isTaskView ? 'hidden' : ''} rounded-2xl border border-slate-200 bg-white p-6 shadow-sm`}
+>
           <h3 className="font-bold text-slate-900">
             Progreso semanal
           </h3>
