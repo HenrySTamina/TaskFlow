@@ -51,7 +51,7 @@ function Sidebar({
           type="button"
           aria-label="Cerrar menú"
           onClick={onClose}
-          className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
+          className="taskflow-backdrop-enter fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
         />
       )}
 
@@ -62,7 +62,7 @@ function Sidebar({
       >
         <div className="flex h-20 items-center justify-between border-b border-slate-100 px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 font-bold text-white shadow-lg shadow-indigo-200">
+            <div className="taskflow-logo flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 font-bold text-white shadow-lg shadow-indigo-200">
               TF
             </div>
 
@@ -81,9 +81,9 @@ function Sidebar({
             type="button"
             onClick={onClose}
             aria-label="Cerrar menú lateral"
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
+            className="taskflow-interactive rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
           >
-            <X size={20} />
+            <X className="taskflow-icon" size={20} />
           </button>
         </div>
 
@@ -104,13 +104,16 @@ function Sidebar({
                   onClose()
                 }}
                 aria-current={isActive ? 'page' : undefined}
-                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
+                className={`taskflow-nav-item flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
                   isActive
                     ? 'bg-indigo-50 text-indigo-700'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <Icon size={20} />
+                <Icon
+                  className="taskflow-nav-icon"
+                  size={20}
+                />
                 <span>{label}</span>
               </button>
             )
@@ -118,8 +121,8 @@ function Sidebar({
         </nav>
 
         <div className="border-t border-slate-100 p-4">
-          <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-700">
+          <div className="taskflow-card-subtle flex items-center gap-3 rounded-xl bg-slate-50 p-3">
+            <div className="taskflow-avatar flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-700">
               {getInitials(displayName)}
             </div>
 
