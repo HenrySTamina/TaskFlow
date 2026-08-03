@@ -14,7 +14,7 @@ function NotificationPanel({
   onOpenSettings,
 }) {
   return (
-    <section className="absolute right-0 top-14 z-50 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+    <section className="fixed left-4 right-4 top-32 z-50 w-auto overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:absolute sm:left-auto sm:right-0 sm:top-14 sm:w-[min(24rem,calc(100vw-2rem))]">
       <header className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
         <div>
           <h3 className="font-bold text-slate-900">
