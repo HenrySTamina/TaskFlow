@@ -3,36 +3,47 @@ import {
   CalendarDays,
   LayoutDashboard,
   ListTodo,
-  LogOut,
   Settings,
   X,
 } from 'lucide-react'
 
+import { getInitials } from '../../utils/profile'
+
 const menuItems = [
   {
+    id: 'summary',
     label: 'Resumen',
     icon: LayoutDashboard,
-    active: true,
   },
   {
+    id: 'tasks',
     label: 'Mis tareas',
     icon: ListTodo,
   },
   {
+    id: 'calendar',
     label: 'Calendario',
     icon: CalendarDays,
   },
   {
+    id: 'statistics',
     label: 'Estadísticas',
     icon: BarChart3,
   },
   {
+    id: 'settings',
     label: 'Configuración',
     icon: Settings,
   },
 ]
 
-function Sidebar({ isOpen, onClose }) {
+function Sidebar({
+  isOpen,
+  onClose,
+  activeView,
+  onNavigate,
+  displayName,
+}) {
   return (
     <>
       {isOpen && (
@@ -40,7 +51,7 @@ function Sidebar({ isOpen, onClose }) {
           type="button"
           aria-label="Cerrar menú"
           onClick={onClose}
-          className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
+          className="taskflow-backdrop-enter fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
         />
       )}
 
@@ -51,7 +62,7 @@ function Sidebar({ isOpen, onClose }) {
       >
         <div className="flex h-20 items-center justify-between border-b border-slate-100 px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 font-bold text-white shadow-lg shadow-indigo-200">
+            <div className="taskflow-logo flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 font-bold text-white shadow-lg shadow-indigo-200">
               TF
             </div>
 
@@ -70,9 +81,9 @@ function Sidebar({ isOpen, onClose }) {
             type="button"
             onClick={onClose}
             aria-label="Cerrar menú lateral"
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
+            className="taskflow-interactive rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
           >
-            <X size={20} />
+            <X className="taskflow-icon" size={20} />
           </button>
         </div>
 
@@ -81,31 +92,43 @@ function Sidebar({ isOpen, onClose }) {
             Menú principal
           </p>
 
-          {menuItems.map(({ label, icon: Icon, active }) => (
-            <button
-              key={label}
-              type="button"
-              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
-                active
-                  ? 'bg-indigo-50 text-indigo-700'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-              }`}
-            >
-              <Icon size={20} />
-              <span>{label}</span>
-            </button>
-          ))}
+          {menuItems.map(({ id, label, icon: Icon }) => {
+            const isActive = activeView === id
+
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => {
+                  onNavigate(id)
+                  onClose()
+                }}
+                aria-current={isActive ? 'page' : undefined}
+                className={`taskflow-nav-item flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
+                  isActive
+                    ? 'bg-indigo-50 text-indigo-700'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <Icon
+                  className="taskflow-nav-icon"
+                  size={20}
+                />
+                <span>{label}</span>
+              </button>
+            )
+          })}
         </nav>
 
         <div className="border-t border-slate-100 p-4">
-          <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-700">
-              HA
+          <div className="taskflow-card-subtle flex items-center gap-3 rounded-xl bg-slate-50 p-3">
+            <div className="taskflow-avatar flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-700">
+              {getInitials(displayName)}
             </div>
 
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-slate-900">
-                Henry Alvaro
+                {displayName}
               </p>
 
               <p className="truncate text-xs text-slate-500">
@@ -114,13 +137,9 @@ function Sidebar({ isOpen, onClose }) {
             </div>
           </div>
 
-          <button
-            type="button"
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600"
-          >
-            <LogOut size={19} />
-            <span>Cerrar sesión</span>
-          </button>
+          <p className="mt-3 text-center text-xs text-slate-400">
+            TaskFlow v1.1
+          </p>
         </div>
       </aside>
     </>

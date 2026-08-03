@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Base de datos local de TaskFlow
+backend/data/*.db
+backend/data/*.db-shm
+backend/data/*.db-wal

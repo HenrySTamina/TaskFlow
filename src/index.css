@@ -1,5 +1,70 @@
 @import "tailwindcss";
 
+:root {
+  color-scheme: light;
+  --taskflow-motion-fast: 140ms;
+  --taskflow-motion-base: 220ms;
+  --taskflow-motion-slow: 360ms;
+  --taskflow-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --taskflow-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --taskflow-accent-soft-dark: #1e1b4b;
+  --taskflow-accent-text-dark: #a5b4fc;
+  --taskflow-accent-border-dark: #818cf8;
+}
+
+html[data-accent='indigo'] {
+  --color-indigo-50: #eef2ff;
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+  --color-indigo-800: #3730a3;
+  --taskflow-accent-soft-dark: #1e1b4b;
+  --taskflow-accent-text-dark: #a5b4fc;
+  --taskflow-accent-border-dark: #818cf8;
+}
+
+html[data-accent='purple'] {
+  --color-indigo-50: #faf5ff;
+  --color-indigo-100: #f3e8ff;
+  --color-indigo-200: #e9d5ff;
+  --color-indigo-500: #a855f7;
+  --color-indigo-600: #9333ea;
+  --color-indigo-700: #7e22ce;
+  --color-indigo-800: #6b21a8;
+  --taskflow-accent-soft-dark: #3b0764;
+  --taskflow-accent-text-dark: #d8b4fe;
+  --taskflow-accent-border-dark: #c084fc;
+}
+
+html[data-accent='green'] {
+  --color-indigo-50: #ecfdf5;
+  --color-indigo-100: #d1fae5;
+  --color-indigo-200: #a7f3d0;
+  --color-indigo-500: #10b981;
+  --color-indigo-600: #059669;
+  --color-indigo-700: #047857;
+  --color-indigo-800: #065f46;
+  --taskflow-accent-soft-dark: #022c22;
+  --taskflow-accent-text-dark: #6ee7b7;
+  --taskflow-accent-border-dark: #34d399;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --color-slate-50: #111827;
+  --color-slate-100: #1e293b;
+  --color-slate-200: #334155;
+  --color-slate-300: #64748b;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #cbd5e1;
+  --color-slate-600: #e2e8f0;
+  --color-slate-700: #e5e7eb;
+  --color-slate-800: #f1f5f9;
+  --color-slate-900: #f8fafc;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -10,6 +75,118 @@ body {
   min-height: 100vh;
   background-color: #f8fafc;
   font-family: Inter, system-ui, sans-serif;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+html[data-theme='dark'] body {
+  background-color: #020617;
+  color: #e2e8f0;
+}
+
+html[data-theme='dark'] .bg-white {
+  background-color: #0f172a;
+}
+
+html[data-theme='dark'] [class~='bg-white/90'] {
+  background-color: rgb(15 23 42 / 0.9);
+}
+
+html[data-theme='dark'] .bg-indigo-50,
+html[data-theme='dark'] .bg-indigo-100,
+html[data-theme='dark'] [class~='bg-indigo-50/60'] {
+  background-color: var(--taskflow-accent-soft-dark);
+}
+
+html[data-theme='dark'] .text-indigo-500,
+html[data-theme='dark'] .text-indigo-600,
+html[data-theme='dark'] .text-indigo-700,
+html[data-theme='dark'] .text-indigo-800 {
+  color: var(--taskflow-accent-text-dark);
+}
+
+html[data-theme='dark'] .border-indigo-100,
+html[data-theme='dark'] .border-indigo-500 {
+  border-color: var(--taskflow-accent-border-dark);
+}
+
+html[data-theme='dark'] .ring-indigo-50 {
+  --tw-ring-color: color-mix(
+    in srgb,
+    var(--taskflow-accent-border-dark) 28%,
+    transparent
+  );
+}
+
+html[data-theme='dark'] .shadow-indigo-200 {
+  --tw-shadow-color: color-mix(
+    in srgb,
+    var(--color-indigo-600) 32%,
+    transparent
+  );
+}
+
+html[data-theme='dark'] .bg-red-50 {
+  background-color: #450a0a;
+}
+
+html[data-theme='dark'] .border-red-100,
+html[data-theme='dark'] .border-red-200,
+html[data-theme='dark'] .border-red-400 {
+  border-color: #991b1b;
+}
+
+html[data-theme='dark'] .text-red-600,
+html[data-theme='dark'] .text-red-700,
+html[data-theme='dark'] .text-red-800 {
+  color: #fca5a5;
+}
+
+html[data-theme='dark'] .ring-red-50 {
+  --tw-ring-color: rgb(248 113 113 / 0.22);
+}
+
+html[data-theme='dark'] .shadow-red-200 {
+  --tw-shadow-color: rgb(127 29 29 / 0.38);
+}
+
+html[data-theme='dark'] .bg-amber-50 {
+  background-color: #451a03;
+}
+
+html[data-theme='dark'] .border-amber-100 {
+  border-color: #92400e;
+}
+
+html[data-theme='dark'] .text-amber-600,
+html[data-theme='dark'] .text-amber-700,
+html[data-theme='dark'] .text-amber-800 {
+  color: #fcd34d;
+}
+
+html[data-theme='dark'] .bg-emerald-50 {
+  background-color: #022c22;
+}
+
+html[data-theme='dark'] .border-emerald-200 {
+  border-color: #047857;
+}
+
+html[data-theme='dark'] .text-emerald-600,
+html[data-theme='dark'] .text-emerald-700,
+html[data-theme='dark'] .text-emerald-800 {
+  color: #6ee7b7;
+}
+
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder {
+  color: #94a3b8;
+}
+
+html[data-theme='dark'] ::selection {
+  background-color: var(--color-indigo-600);
+  color: white;
 }
 
 button,
@@ -17,4 +194,560 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+
+@keyframes taskflow-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes taskflow-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes taskflow-logo-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.78) rotate(-8deg);
+  }
+
+  70% {
+    transform: scale(1.05) rotate(2deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes taskflow-bell-wiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+
+  20% {
+    transform: rotate(13deg);
+  }
+
+  40% {
+    transform: rotate(-11deg);
+  }
+
+  60% {
+    transform: rotate(7deg);
+  }
+
+  80% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes taskflow-badge-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+
+  70% {
+    transform: scale(1.16);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes taskflow-accent-wave {
+  from {
+    background-position: 135% 0;
+  }
+
+  to {
+    background-position: -35% 0;
+  }
+}
+
+@keyframes taskflow-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes taskflow-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes taskflow-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes taskflow-task-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes taskflow-check-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.45) rotate(-18deg);
+  }
+
+  72% {
+    transform: scale(1.18) rotate(3deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes taskflow-wave-hand {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(14deg);
+  }
+
+  50% {
+    transform: rotate(-8deg);
+  }
+
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+.taskflow-view-enter {
+  animation: taskflow-fade-up var(--taskflow-motion-slow)
+    var(--taskflow-ease-out) both;
+}
+
+.taskflow-modal-backdrop {
+  animation: taskflow-fade-in var(--taskflow-motion-base) ease-out both;
+}
+
+.taskflow-modal-enter {
+  animation: taskflow-modal-in 320ms
+    var(--taskflow-ease-out) both;
+  transform-origin: center;
+}
+
+.taskflow-panel-enter {
+  animation: taskflow-panel-in 280ms
+    var(--taskflow-ease-out) both;
+  transform-origin: top right;
+}
+
+.taskflow-menu-enter {
+  animation: taskflow-menu-in var(--taskflow-motion-base)
+    var(--taskflow-ease-out) both;
+  transform-origin: top right;
+}
+
+.taskflow-status-enter,
+.taskflow-filter-bar,
+.taskflow-empty-state {
+  animation: taskflow-fade-up 300ms
+    var(--taskflow-ease-out) both;
+}
+
+.taskflow-wave {
+  display: inline-block;
+  animation: taskflow-wave-hand 720ms ease-in-out 240ms both;
+  transform-origin: 70% 75%;
+}
+
+.taskflow-task-list > *,
+.taskflow-notification-list > * {
+  animation: taskflow-task-in 300ms
+    var(--taskflow-ease-out) both;
+}
+
+.taskflow-task-list > :nth-child(2),
+.taskflow-notification-list > :nth-child(2) {
+  animation-delay: 35ms;
+}
+
+.taskflow-task-list > :nth-child(3),
+.taskflow-notification-list > :nth-child(3) {
+  animation-delay: 70ms;
+}
+
+.taskflow-task-list > :nth-child(4),
+.taskflow-notification-list > :nth-child(4) {
+  animation-delay: 105ms;
+}
+
+.taskflow-task-list > :nth-child(n + 5),
+.taskflow-notification-list > :nth-child(n + 5) {
+  animation-delay: 140ms;
+}
+
+.taskflow-task-row,
+.taskflow-notification-item,
+.taskflow-stat-card {
+  transition:
+    transform var(--taskflow-motion-base)
+      var(--taskflow-ease-out),
+    box-shadow var(--taskflow-motion-base) ease,
+    background-color var(--taskflow-motion-base) ease;
+}
+
+.taskflow-check-button {
+  transition:
+    transform var(--taskflow-motion-fast) ease,
+    border-color var(--taskflow-motion-base) ease,
+    color var(--taskflow-motion-base) ease,
+    box-shadow var(--taskflow-motion-base) ease;
+}
+
+.taskflow-check-complete {
+  animation: taskflow-check-pop 360ms
+    var(--taskflow-ease-spring) both;
+}
+
+.taskflow-stat-icon,
+.taskflow-empty-icon,
+.taskflow-filter-icon,
+.taskflow-danger-icon,
+.taskflow-progress-ring {
+  transition:
+    transform var(--taskflow-motion-base)
+      var(--taskflow-ease-spring),
+    box-shadow var(--taskflow-motion-base) ease;
+}
+
+.taskflow-empty-icon,
+.taskflow-danger-icon {
+  animation: taskflow-check-pop 420ms
+    var(--taskflow-ease-spring) both;
+}
+
+.taskflow-title-swap {
+  animation: taskflow-fade-up var(--taskflow-motion-base)
+    var(--taskflow-ease-out) both;
+}
+
+.taskflow-backdrop-enter {
+  animation: taskflow-fade-in var(--taskflow-motion-base) ease-out both;
+}
+
+.taskflow-interactive {
+  transform-origin: center;
+  transition:
+    transform var(--taskflow-motion-fast) ease,
+    box-shadow var(--taskflow-motion-base) ease,
+    background-color var(--taskflow-motion-base) ease,
+    border-color var(--taskflow-motion-base) ease,
+    color var(--taskflow-motion-base) ease;
+}
+
+.taskflow-interactive:active {
+  transform: scale(0.96);
+}
+
+.taskflow-interactive:focus-visible,
+.taskflow-nav-item:focus-visible {
+  outline: 3px solid color-mix(
+    in srgb,
+    var(--color-indigo-500) 34%,
+    transparent
+  );
+  outline-offset: 3px;
+}
+
+.taskflow-icon,
+.taskflow-nav-icon {
+  transition: transform var(--taskflow-motion-base)
+    var(--taskflow-ease-out);
+}
+
+.taskflow-nav-item {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform var(--taskflow-motion-fast) ease,
+    background-color var(--taskflow-motion-base) ease,
+    color var(--taskflow-motion-base) ease;
+}
+
+.taskflow-nav-item::before {
+  position: absolute;
+  top: 25%;
+  bottom: 25%;
+  left: 0;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--color-indigo-600);
+  content: '';
+  opacity: 0;
+  transform: scaleY(0);
+  transition:
+    opacity var(--taskflow-motion-base) ease,
+    transform var(--taskflow-motion-base)
+      var(--taskflow-ease-spring);
+}
+
+.taskflow-nav-item[aria-current='page']::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.taskflow-logo {
+  animation: taskflow-logo-in 520ms var(--taskflow-ease-out) both;
+  transition:
+    transform var(--taskflow-motion-base)
+      var(--taskflow-ease-spring),
+    box-shadow var(--taskflow-motion-base) ease;
+}
+
+.taskflow-avatar {
+  transition:
+    transform var(--taskflow-motion-base)
+      var(--taskflow-ease-spring),
+    box-shadow var(--taskflow-motion-base) ease;
+}
+
+.taskflow-search {
+  transition:
+    transform var(--taskflow-motion-base)
+      var(--taskflow-ease-out),
+    border-color var(--taskflow-motion-base) ease,
+    box-shadow var(--taskflow-motion-base) ease;
+}
+
+.taskflow-search:focus-within {
+  border-color: var(--color-indigo-500);
+  box-shadow: 0 0 0 4px
+    color-mix(in srgb, var(--color-indigo-500) 12%, transparent);
+  transform: translateY(-1px);
+}
+
+.taskflow-bell-has-alert {
+  animation: taskflow-bell-wiggle 720ms ease-in-out 180ms both;
+  transform-origin: 50% 12%;
+}
+
+.taskflow-badge-pop {
+  animation: taskflow-badge-pop 360ms
+    var(--taskflow-ease-spring) both;
+}
+
+.taskflow-card-subtle {
+  transition:
+    transform var(--taskflow-motion-base)
+      var(--taskflow-ease-out),
+    box-shadow var(--taskflow-motion-base) ease;
+}
+
+button.bg-indigo-600 {
+  background-image: linear-gradient(
+    110deg,
+    transparent 28%,
+    color-mix(
+      in srgb,
+      var(--color-indigo-500) 42%,
+      white
+    ) 48%,
+    transparent 68%
+  );
+  background-repeat: no-repeat;
+  background-position: 135% 0;
+  background-size: 240% 100%;
+  box-shadow:
+    0 8px 22px
+      color-mix(
+        in srgb,
+        var(--color-indigo-600) 28%,
+        transparent
+      ),
+    inset 0 1px 0 rgb(255 255 255 / 0.2);
+  transition:
+    transform var(--taskflow-motion-fast) ease,
+    box-shadow var(--taskflow-motion-base) ease,
+    background-color var(--taskflow-motion-base) ease;
+}
+
+button.bg-indigo-600:focus-visible {
+  outline: 3px solid color-mix(
+    in srgb,
+    var(--color-indigo-500) 38%,
+    transparent
+  );
+  outline-offset: 3px;
+}
+
+.taskflow-nav-item[aria-current='page'] {
+  box-shadow: inset 0 0 24px
+    color-mix(
+      in srgb,
+      var(--color-indigo-500) 10%,
+      transparent
+    );
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .taskflow-interactive:hover {
+    transform: translateY(-1px);
+  }
+
+  .taskflow-interactive:hover .taskflow-icon {
+    transform: scale(1.1);
+  }
+
+  .taskflow-nav-item:hover {
+    transform: translateX(3px);
+  }
+
+  .taskflow-nav-item:hover .taskflow-nav-icon {
+    transform: scale(1.08);
+  }
+
+  .taskflow-logo:hover {
+    box-shadow: 0 12px 28px
+      color-mix(in srgb, var(--color-indigo-600) 28%, transparent);
+    transform: translateY(-2px) rotate(-2deg);
+  }
+
+  .taskflow-avatar:hover {
+    box-shadow: 0 8px 20px
+      color-mix(in srgb, var(--color-indigo-600) 24%, transparent);
+    transform: scale(1.06);
+  }
+
+  .taskflow-card-subtle:hover {
+    transform: translateY(-2px);
+  }
+
+  button.bg-indigo-600:hover {
+    animation: taskflow-accent-wave 760ms
+      var(--taskflow-ease-out) both;
+    box-shadow:
+      0 0 16px
+        color-mix(
+          in srgb,
+          var(--color-indigo-500) 46%,
+          transparent
+        ),
+      0 12px 30px
+        color-mix(
+          in srgb,
+          var(--color-indigo-600) 34%,
+          transparent
+        ),
+      inset 0 1px 0 rgb(255 255 255 / 0.28);
+    transform: translateY(-2px);
+  }
+
+  button.bg-indigo-600:active {
+    transform: scale(0.97);
+  }
+
+  .taskflow-task-row:hover {
+    box-shadow: inset 3px 0 0
+      color-mix(
+        in srgb,
+        var(--color-indigo-500) 72%,
+        transparent
+      );
+    transform: translateX(3px);
+  }
+
+  .taskflow-notification-item:hover {
+    transform: translateX(3px);
+  }
+
+  .taskflow-stat-card:hover {
+    box-shadow: 0 14px 30px rgb(15 23 42 / 0.1);
+    transform: translateY(-4px);
+  }
+
+  .taskflow-stat-card:hover .taskflow-stat-icon {
+    transform: scale(1.08) rotate(-3deg);
+  }
+
+  .taskflow-check-button:hover {
+    box-shadow: 0 0 0 5px
+      color-mix(
+        in srgb,
+        var(--color-indigo-500) 12%,
+        transparent
+      );
+    transform: scale(1.08);
+  }
+
+  .taskflow-empty-icon:hover,
+  .taskflow-danger-icon:hover,
+  .taskflow-progress-ring:hover {
+    transform: translateY(-2px) scale(1.03);
+  }
+
+  .taskflow-filter-bar:hover .taskflow-filter-icon {
+    transform: rotate(-8deg) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
