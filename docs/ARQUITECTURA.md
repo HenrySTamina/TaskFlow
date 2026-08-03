@@ -4,7 +4,7 @@
 
 TaskFlow utiliza una arquitectura cliente-servidor. El frontend es una aplicación de página única desarrollada con React; se comunica mediante HTTP y JSON con una API REST de Express. La API organiza sus responsabilidades en rutas, controladores, servicios y repositorios. SQLite conserva las tareas en el equipo donde se ejecuta el backend.
 
-Las preferencias visuales se guardan en LocalStorage porque pertenecen al navegador; no sustituyen la persistencia principal de tareas.
+Las preferencias visuales se guardan en LocalStorage porque pertenecen al navegador; no sustituyen la persistencia principal de tareas. El servicio de temas detecta la apariencia del sistema, aplica atributos y variables CSS al documento y permite seleccionar manualmente modo y color de acento.
 
 ## 2. Diagrama de contenedores
 
@@ -25,7 +25,7 @@ flowchart TB
     subgraph FE["Frontend React"]
         UI["Componentes UI\nNavbar, Sidebar, modales"]
         VW["Vistas\nDashboard, Calendar, Statistics, Settings"]
-        FS["Servicios frontend\ntaskApi, taskMigration, preferences"]
+        FS["Servicios frontend\ntaskApi, taskMigration, preferences, theme"]
         UT["Utilidades\nperfil y notificaciones"]
         UI --> VW
         VW --> FS
@@ -57,6 +57,7 @@ flowchart TB
 | `src/services/taskApi.js` | Encapsular solicitudes HTTP y normalizar errores de conexión |
 | `src/services/taskMigration.js` | Migrar datos antiguos si SQLite está vacía |
 | `src/services/preferences.js` | Conservar preferencias del usuario en el navegador |
+| `src/services/theme.js` | Resolver el modo del sistema y aplicar tema y color de acento |
 | `backend/src/routes/*` | Relacionar métodos y rutas con controladores |
 | `backend/src/controllers/*` | Traducir solicitudes HTTP a llamadas de aplicación |
 | `backend/src/services/*` | Validar datos y aplicar reglas de negocio |
@@ -187,7 +188,7 @@ Los valores se enlazan mediante parámetros, evitando concatenar directamente en
 
 ### LocalStorage limitado
 
-Se utiliza solo para preferencias y migración inicial. La fuente principal de tareas es SQLite.
+Se utiliza solo para preferencias, incluyendo modo de interfaz y color de acento, y para la migración inicial. La fuente principal de tareas es SQLite.
 
 ## 11. Limites conocidos
 
@@ -197,4 +198,3 @@ Se utiliza solo para preferencias y migración inicial. La fuente principal de t
 - La estrategia de pruebas actual combina análisis estático, compilación y pruebas manuales; no existe aún una suite automatizada.
 
 Estos limites se documentan para mantener consistencia entre arquitectura e implementación.
-

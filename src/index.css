@@ -1,5 +1,65 @@
 @import "tailwindcss";
 
+:root {
+  color-scheme: light;
+  --taskflow-accent-soft-dark: #1e1b4b;
+  --taskflow-accent-text-dark: #a5b4fc;
+  --taskflow-accent-border-dark: #818cf8;
+}
+
+html[data-accent='indigo'] {
+  --color-indigo-50: #eef2ff;
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+  --color-indigo-800: #3730a3;
+  --taskflow-accent-soft-dark: #1e1b4b;
+  --taskflow-accent-text-dark: #a5b4fc;
+  --taskflow-accent-border-dark: #818cf8;
+}
+
+html[data-accent='purple'] {
+  --color-indigo-50: #faf5ff;
+  --color-indigo-100: #f3e8ff;
+  --color-indigo-200: #e9d5ff;
+  --color-indigo-500: #a855f7;
+  --color-indigo-600: #9333ea;
+  --color-indigo-700: #7e22ce;
+  --color-indigo-800: #6b21a8;
+  --taskflow-accent-soft-dark: #3b0764;
+  --taskflow-accent-text-dark: #d8b4fe;
+  --taskflow-accent-border-dark: #c084fc;
+}
+
+html[data-accent='green'] {
+  --color-indigo-50: #ecfdf5;
+  --color-indigo-100: #d1fae5;
+  --color-indigo-200: #a7f3d0;
+  --color-indigo-500: #10b981;
+  --color-indigo-600: #059669;
+  --color-indigo-700: #047857;
+  --color-indigo-800: #065f46;
+  --taskflow-accent-soft-dark: #022c22;
+  --taskflow-accent-text-dark: #6ee7b7;
+  --taskflow-accent-border-dark: #34d399;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --color-slate-50: #111827;
+  --color-slate-100: #1e293b;
+  --color-slate-200: #334155;
+  --color-slate-300: #64748b;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #cbd5e1;
+  --color-slate-600: #e2e8f0;
+  --color-slate-700: #e5e7eb;
+  --color-slate-800: #f1f5f9;
+  --color-slate-900: #f8fafc;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -10,6 +70,118 @@ body {
   min-height: 100vh;
   background-color: #f8fafc;
   font-family: Inter, system-ui, sans-serif;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+html[data-theme='dark'] body {
+  background-color: #020617;
+  color: #e2e8f0;
+}
+
+html[data-theme='dark'] .bg-white {
+  background-color: #0f172a;
+}
+
+html[data-theme='dark'] [class~='bg-white/90'] {
+  background-color: rgb(15 23 42 / 0.9);
+}
+
+html[data-theme='dark'] .bg-indigo-50,
+html[data-theme='dark'] .bg-indigo-100,
+html[data-theme='dark'] [class~='bg-indigo-50/60'] {
+  background-color: var(--taskflow-accent-soft-dark);
+}
+
+html[data-theme='dark'] .text-indigo-500,
+html[data-theme='dark'] .text-indigo-600,
+html[data-theme='dark'] .text-indigo-700,
+html[data-theme='dark'] .text-indigo-800 {
+  color: var(--taskflow-accent-text-dark);
+}
+
+html[data-theme='dark'] .border-indigo-100,
+html[data-theme='dark'] .border-indigo-500 {
+  border-color: var(--taskflow-accent-border-dark);
+}
+
+html[data-theme='dark'] .ring-indigo-50 {
+  --tw-ring-color: color-mix(
+    in srgb,
+    var(--taskflow-accent-border-dark) 28%,
+    transparent
+  );
+}
+
+html[data-theme='dark'] .shadow-indigo-200 {
+  --tw-shadow-color: color-mix(
+    in srgb,
+    var(--color-indigo-600) 32%,
+    transparent
+  );
+}
+
+html[data-theme='dark'] .bg-red-50 {
+  background-color: #450a0a;
+}
+
+html[data-theme='dark'] .border-red-100,
+html[data-theme='dark'] .border-red-200,
+html[data-theme='dark'] .border-red-400 {
+  border-color: #991b1b;
+}
+
+html[data-theme='dark'] .text-red-600,
+html[data-theme='dark'] .text-red-700,
+html[data-theme='dark'] .text-red-800 {
+  color: #fca5a5;
+}
+
+html[data-theme='dark'] .ring-red-50 {
+  --tw-ring-color: rgb(248 113 113 / 0.22);
+}
+
+html[data-theme='dark'] .shadow-red-200 {
+  --tw-shadow-color: rgb(127 29 29 / 0.38);
+}
+
+html[data-theme='dark'] .bg-amber-50 {
+  background-color: #451a03;
+}
+
+html[data-theme='dark'] .border-amber-100 {
+  border-color: #92400e;
+}
+
+html[data-theme='dark'] .text-amber-600,
+html[data-theme='dark'] .text-amber-700,
+html[data-theme='dark'] .text-amber-800 {
+  color: #fcd34d;
+}
+
+html[data-theme='dark'] .bg-emerald-50 {
+  background-color: #022c22;
+}
+
+html[data-theme='dark'] .border-emerald-200 {
+  border-color: #047857;
+}
+
+html[data-theme='dark'] .text-emerald-600,
+html[data-theme='dark'] .text-emerald-700,
+html[data-theme='dark'] .text-emerald-800 {
+  color: #6ee7b7;
+}
+
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder {
+  color: #94a3b8;
+}
+
+html[data-theme='dark'] ::selection {
+  background-color: var(--color-indigo-600);
+  color: white;
 }
 
 button,

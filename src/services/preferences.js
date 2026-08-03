@@ -1,9 +1,23 @@
 const PREFERENCES_STORAGE_KEY = 'taskflow_preferences'
 
+const VALID_THEME_MODES = new Set([
+  'system',
+  'light',
+  'dark',
+])
+
+const VALID_ACCENT_COLORS = new Set([
+  'indigo',
+  'purple',
+  'green',
+])
+
 export const DEFAULT_PREFERENCES = {
   displayName: 'Henry Alvaro',
   weeklyGoal: 5,
   notificationsEnabled: true,
+  themeMode: 'system',
+  accentColor: 'indigo',
 }
 
 function normalizePreferences(preferences = {}) {
@@ -27,6 +41,12 @@ function normalizePreferences(preferences = {}) {
       typeof preferences.notificationsEnabled === 'boolean'
         ? preferences.notificationsEnabled
         : DEFAULT_PREFERENCES.notificationsEnabled,
+    themeMode: VALID_THEME_MODES.has(preferences.themeMode)
+      ? preferences.themeMode
+      : DEFAULT_PREFERENCES.themeMode,
+    accentColor: VALID_ACCENT_COLORS.has(preferences.accentColor)
+      ? preferences.accentColor
+      : DEFAULT_PREFERENCES.accentColor,
   }
 }
 

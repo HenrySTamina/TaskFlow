@@ -376,7 +376,7 @@ function Dashboard({
             <div
               className="relative flex h-44 w-44 items-center justify-center rounded-full"
               style={{
-                background: `conic-gradient(#4f46e5 0deg ${progressDegrees}deg, #e2e8f0 ${progressDegrees}deg 360deg)`,
+                background: `conic-gradient(var(--color-indigo-600) 0deg ${progressDegrees}deg, var(--color-slate-200) ${progressDegrees}deg 360deg)`,
               }}
             >
               <div className="flex h-32 w-32 flex-col items-center justify-center rounded-full bg-white">
@@ -429,3 +429,4 @@ function Dashboard({
 }
 
 export default Dashboard
+

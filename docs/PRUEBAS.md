@@ -20,10 +20,10 @@ npm run lint
 npm run build
 ```
 
-Ultimo resultado registrado antes de la documentación final:
+Ultimo resultado registrado para HU-09:
 
-- Oxlint: `0 warnings` y `0 errors` sobre 28 archivos.
-- Vite: compilación correcta de 1800 módulos.
+- Oxlint: `0 warnings` y `0 errors` sobre 29 archivos.
+- Vite: compilación correcta de 1801 módulos.
 - Build generado correctamente en `dist`.
 
 ## 3. Validación del backend
@@ -88,6 +88,12 @@ Resultado esperado:
 | Calendario | Abrir tarea | Formulario de edición disponible | Aprobado |
 | Estadisticas | Modificar una tarea | Metricas se recalculan | Aprobado |
 | Configuración | Guardar preferencias | Se conservan después de recargar | Aprobado |
+| Apariencia | Modo predeterminado Sistema | Coincide con la preferencia clara u oscura del dispositivo | Aprobado |
+| Apariencia | Cambiar entre Sistema, Claro y Oscuro | La interfaz completa cambia inmediatamente | Aprobado |
+| Apariencia | Cambiar apariencia del dispositivo en modo Sistema | TaskFlow responde al cambio sin perder la selección | Aprobado |
+| Apariencia | Elegir Índigo, Morado o Verde esmeralda | Controles, indicadores y gráficos usan el acento seleccionado | Aprobado |
+| Apariencia | Recargar el navegador | Modo manual y color de acento permanecen | Aprobado |
+| Apariencia | Restaurar configuración | Regresa a Sistema e Índigo | Aprobado |
 | Perfil | Cambiar nombre | Saludo, nombre e iniciales cambian | Aprobado |
 | Meta semanal | Cambiar objetivo | Numero y porcentaje cambian | Aprobado |
 | Notificaciones | Tarea vencida o próxima | Aparece contador real | Aprobado |
@@ -114,6 +120,7 @@ Casos:
 | Calendario | Navegacion y desplazamiento disponibles | Aprobado |
 | Estadisticas | Tarjetas se reorganizan | Aprobado |
 | Configuración | Formulario cabe y puede recorrerse | Aprobado |
+| Temas | Vistas, modales y notificaciones conservan contraste | Aprobado |
 | Notificaciones | Panel permanece dentro de la pantalla | Aprobado después de correccion `03e9129` |
 
 ## 7. Persistencia
@@ -130,7 +137,7 @@ Resultado:
 
 - La tarea permanece en SQLite.
 - LocalStorage no contiene la lista principal de tareas.
-- Las preferencias visuales si permanecen en LocalStorage.
+- Las preferencias visuales, incluido modo y color de acento, si permanecen en LocalStorage.
 
 ## 8. Trazabilidad
 
@@ -140,6 +147,7 @@ Cada Pull Request incluye sus propias pruebas. Evidencias destacadas:
 - [PR #14](https://github.com/HenrySTamina/TaskFlow/pull/14): endpoints y validaciones CRUD.
 - [PR #16](https://github.com/HenrySTamina/TaskFlow/pull/16): conexión frontend/API y persistencia.
 - [PR #18](https://github.com/HenrySTamina/TaskFlow/pull/18): navegación, calendario, estadísticas, preferencias y notificaciones.
+- [Issue #25](https://github.com/HenrySTamina/TaskFlow/issues/25): temas adaptativos y colores de acento.
 
 ## 9. Criterio de aceptación final
 
@@ -150,8 +158,8 @@ La entrega se considera válida cuando:
 - CRUD funciona desde la interfaz.
 - Los datos permanecen después de reiniciar.
 - Todas las vistas y controles tienen una función real.
+- El tema sigue al dispositivo por defecto y permite selección manual persistente.
 - El modo móvil es utilizable.
 - Lint y build terminan correctamente.
 - El árbol de Git está limpio.
 - La documentación coincide con el código integrado.
-

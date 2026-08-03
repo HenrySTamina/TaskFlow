@@ -6,7 +6,7 @@
 |---|---|---|
 | JavaScript | Logica de frontend y backend | Permite compartir lenguaje y modelos mentales en todo el sistema |
 | JSX | Componentes de React | Integra estructura visual y comportamiento de componentes |
-| CSS mediante Tailwind | Presentacion | Facilita estilos consistentes y responsive |
+| CSS mediante Tailwind | Presentacion y temas | Facilita estilos consistentes, responsive y personalizables mediante variables |
 | SQL | Persistencia | Permite consultas y restricciones relacionales |
 | JSON | Comunicación | Formato nativo para solicitudes y respuestas REST |
 | Markdown | Documentación | Se renderiza directamente en GitHub y admite diagramas Mermaid |
@@ -20,7 +20,7 @@ El proyecto usa módulos ES (`type: module`) tanto en frontend como backend.
 | React | 19.2.7 | Componentes, estado y efectos | Adecuado para una interfaz reactiva con vistas reutilizables |
 | React DOM | 19.2.7 | Renderizado en navegador | Integración oficial de React con el DOM |
 | Vite | 8.1.1 | Servidor y build | Inicio rápido, recarga en caliente y compilación optimizada |
-| Tailwind CSS | 4.3.3 | Sistema visual | Clases utilitarias y variantes responsive coherentes |
+| Tailwind CSS | 4.3.3 | Sistema visual y temas adaptativos | Clases utilitarias, variables CSS y variantes responsive coherentes |
 | `@tailwindcss/vite` | 4.3.3 | Integración Tailwind-Vite | Configuración directa dentro del flujo de Vite |
 | Lucide React | 1.27.0 | Iconos | Iconos accesibles, ligeros y visualmente consistentes |
 
@@ -80,7 +80,7 @@ Entorno utilizado:
 - npm `11.6.0`.
 - Navegador Chromium moderno.
 
-La aplicación utiliza APIs estándar de navegadores modernos: `fetch`, LocalStorage, `Intl.DateTimeFormat` y módulos ES.
+La aplicación utiliza APIs estándar de navegadores modernos: `fetch`, LocalStorage, `Intl.DateTimeFormat`, `window.matchMedia` y módulos ES. La apariencia combina `prefers-color-scheme`, atributos `data-*` y variables CSS para ofrecer modo automático, claro u oscuro y colores de acento sin agregar dependencias.
 
 ## 9. Scripts disponibles
 
@@ -108,7 +108,7 @@ El stack se seleccionó considerando:
 2. Facilidad de ejecución local.
 3. Separacion clara entre frontend y backend.
 4. Soporte para diseño responsive.
-5. Persistencia real sin infraestructura externa.
-6. Evidencia fácil de reproducir durante la evaluación.
-7. Adecuacion al tiempo y alcance académico.
-
+5. Adaptación a la apariencia del dispositivo y personalización visual persistente.
+6. Persistencia real sin infraestructura externa.
+7. Evidencia fácil de reproducir durante la evaluación.
+8. Adecuacion al tiempo y alcance académico.
