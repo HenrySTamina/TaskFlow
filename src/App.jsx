@@ -7,6 +7,7 @@ import TaskModal from './components/tasks/TaskModal'
 import ApiStatus from './components/ui/ApiStatus'
 import CalendarView from './pages/CalendarView'
 import Dashboard from './pages/Dashboard'
+import StatisticsView from './pages/StatisticsView'
 import {
   createTask,
   deleteTask,
@@ -182,6 +183,47 @@ function App() {
       setApiError(error.message)
     }
   }
+    
+  async function confirmDeleteTask() {
+    // Aquí permanece el código que ya tienes para eliminar tareas.
+  }
+
+  function renderActiveView() {
+    switch (activeView) {
+      case 'calendar':
+        return (
+          <CalendarView
+            tasks={tasks}
+            searchTerm={searchTerm}
+            onCreateTask={openTaskModal}
+            onEditTask={openEditTask}
+            onToggleTask={toggleTaskStatus}
+          />
+        )
+
+      case 'statistics':
+        return (
+          <StatisticsView
+            tasks={tasks}
+            onCreateTask={openTaskModal}
+          />
+        )
+
+      default:
+        return (
+          <Dashboard
+            viewMode={activeView}
+            tasks={tasks}
+            searchTerm={searchTerm}
+            onCreateTask={openTaskModal}
+            onEditTask={openEditTask}
+            onDeleteTask={requestDeleteTask}
+            onToggleTask={toggleTaskStatus}
+            onSearchChange={setSearchTerm}
+          />
+        )
+    }
+  }
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -205,26 +247,7 @@ function App() {
           onRetry={retryLoadTasks}
         />
 
-        {activeView === 'calendar' ? (
-  <CalendarView
-    tasks={tasks}
-    searchTerm={searchTerm}
-    onCreateTask={openTaskModal}
-    onEditTask={openEditTask}
-    onToggleTask={toggleTaskStatus}
-  />
-) : (
-  <Dashboard
-    viewMode={activeView}
-    tasks={tasks}
-    searchTerm={searchTerm}
-    onCreateTask={openTaskModal}
-    onEditTask={openEditTask}
-    onDeleteTask={requestDeleteTask}
-    onToggleTask={toggleTaskStatus}
-    onSearchChange={setSearchTerm}
-  />
-)}
+        {renderActiveView()}
       </div>
 
       {isTaskModalOpen && (
