@@ -193,7 +193,7 @@ function StatisticsView({
                 <div
                   className="relative flex h-52 w-52 items-center justify-center rounded-full"
                   style={{
-                    background: `conic-gradient(#10b981 0deg ${completionDegrees}deg, #e2e8f0 ${completionDegrees}deg 360deg)`,
+                    background: `conic-gradient(var(--color-emerald-500) 0deg ${completionDegrees}deg, var(--color-slate-200) ${completionDegrees}deg 360deg)`,
                   }}
                 >
                   <div className="flex h-40 w-40 flex-col items-center justify-center rounded-full bg-white">

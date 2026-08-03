@@ -2,15 +2,58 @@ import {
   BellRing,
   CheckCircle2,
   Database,
+  Monitor,
+  Moon,
+  Palette,
   RotateCcw,
   Save,
   Server,
   Settings,
+  Sun,
   User,
 } from 'lucide-react'
 import { useState } from 'react'
 
 import { DEFAULT_PREFERENCES } from '../services/preferences'
+
+const THEME_OPTIONS = [
+  {
+    value: 'system',
+    label: 'Sistema',
+    description: 'Sigue el modo de tu dispositivo.',
+    icon: Monitor,
+  },
+  {
+    value: 'light',
+    label: 'Claro',
+    description: 'Mantiene la interfaz luminosa.',
+    icon: Sun,
+  },
+  {
+    value: 'dark',
+    label: 'Oscuro',
+    description: 'Reduce el brillo de la interfaz.',
+    icon: Moon,
+  },
+]
+
+const ACCENT_OPTIONS = [
+  {
+    value: 'indigo',
+    label: 'Índigo',
+    color: '#4f46e5',
+  },
+  {
+    value: 'purple',
+    label: 'Morado',
+    color: '#9333ea',
+  },
+  {
+    value: 'green',
+    label: 'Verde',
+    color: '#059669',
+  },
+]
 
 function SettingsView({
   preferences,
@@ -32,6 +75,15 @@ function SettingsView({
     setFormData((currentData) => ({
       ...currentData,
       [name]: type === 'checkbox' ? checked : value,
+    }))
+
+    setWasSaved(false)
+  }
+
+  function selectAppearance(name, value) {
+    setFormData((currentData) => ({
+      ...currentData,
+      [name]: value,
     }))
 
     setWasSaved(false)
@@ -120,6 +172,113 @@ function SettingsView({
                 className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
               />
             </label>
+          </article>
+
+          <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                <Palette size={21} />
+              </div>
+
+              <div>
+                <h3 className="font-bold text-slate-900">
+                  Apariencia
+                </h3>
+
+                <p className="mt-1 text-sm text-slate-500">
+                  Adapta TaskFlow a tu dispositivo y estilo personal.
+                </p>
+              </div>
+            </div>
+
+            <fieldset className="mt-6">
+              <legend className="text-sm font-semibold text-slate-700">
+                Modo de interfaz
+              </legend>
+
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                {THEME_OPTIONS.map(({
+                  value,
+                  label,
+                  description,
+                  icon: Icon,
+                }) => {
+                  const isSelected = formData.themeMode === value
+
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      aria-pressed={isSelected}
+                      onClick={() => selectAppearance('themeMode', value)}
+                      className={`rounded-xl border p-4 text-left transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-50 ${
+                        isSelected
+                          ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                          : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Icon size={21} />
+
+                      <span className="mt-3 block text-sm font-bold">
+                        {label}
+                      </span>
+
+                      <span className="mt-1 block text-xs opacity-80">
+                        {description}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </fieldset>
+
+            <fieldset className="mt-6">
+              <legend className="text-sm font-semibold text-slate-700">
+                Color principal
+              </legend>
+
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                {ACCENT_OPTIONS.map(({
+                  value,
+                  label,
+                  color,
+                }) => {
+                  const isSelected = formData.accentColor === value
+
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      aria-pressed={isSelected}
+                      onClick={() => selectAppearance('accentColor', value)}
+                      style={isSelected ? { borderColor: color } : undefined}
+                      className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-50 ${
+                        isSelected
+                          ? 'bg-indigo-50 text-slate-900'
+                          : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <span
+                        className="h-5 w-5 rounded-full shadow-sm"
+                        style={{ backgroundColor: color }}
+                      />
+
+                      <span className="flex-1">
+                        {label}
+                      </span>
+
+                      {isSelected && (
+                        <CheckCircle2 size={18} style={{ color }} />
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <p className="mt-3 text-xs text-slate-500">
+                Guarda la configuración para aplicar los cambios.
+              </p>
+            </fieldset>
           </article>
 
           <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
