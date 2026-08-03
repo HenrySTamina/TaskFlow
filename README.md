@@ -1,6 +1,6 @@
 # TaskFlow
 
-TaskFlow es una aplicación web integral para organizar y administrar tareas. La interfaz permite crear, consultar, editar, completar, eliminar, buscar y filtrar actividades; también incorpora calendario, estadísticas, preferencias y notificaciones. La información de las tareas se conserva en SQLite mediante una API REST desarrollada con Express.
+TaskFlow es una aplicación web integral para organizar y administrar tareas. La interfaz permite crear, consultar, editar, completar, eliminar, buscar y filtrar actividades; también incorpora calendario, estadísticas, preferencias, notificaciones y temas adaptativos. La información de las tareas se conserva en SQLite mediante una API REST desarrollada con Express.
 
 ## Estado del proyecto
 
@@ -24,6 +24,8 @@ TaskFlow es una aplicación web integral para organizar y administrar tareas. La
 - Agenda de actividades organizada por fecha.
 - Estadisticas calculadas con datos reales.
 - Preferencias persistentes de nombre, meta semanal y notificaciones.
+- Tema automático según la apariencia del dispositivo, con selección manual clara u oscura.
+- Colores de acento Índigo, Morado y Verde esmeralda, conservados después de recargar.
 - Panel de notificaciones para tareas vencidas y próximas.
 - Estados visibles de carga, error y reintento cuando la API no está disponible.
 - Migracion inicial de tareas antiguas desde LocalStorage cuando SQLite está vacía.
@@ -168,7 +170,7 @@ La base de datos se genera automáticamente en:
 backend/data/taskflow.db
 ```
 
-Los archivos locales de SQLite están excluidos mediante `.gitignore`. Las tareas se almacenan exclusivamente en SQLite; LocalStorage se utiliza para preferencias de interfaz y para una migración inicial de datos antiguos.
+Los archivos locales de SQLite están excluidos mediante `.gitignore`. Las tareas se almacenan exclusivamente en SQLite; LocalStorage se utiliza para preferencias de interfaz —incluidos tema y color de acento— y para una migración inicial de datos antiguos.
 
 ## Estructura principal
 
@@ -245,6 +247,7 @@ Ejemplos reales:
 feat(api): exponer endpoints CRUD de tareas
 feat(calendar): agregar calendario mensual y agenda
 feat(settings): guardar preferencias del usuario
+feat(theme): agregar controles y paletas adaptativas
 fix(notifications): ajustar panel en dispositivos móviles
 ```
 
@@ -284,4 +287,3 @@ La estrategia y matriz de pruebas se documentan en [docs/PRUEBAS.md](docs/PRUEBA
 
 **Henry Alexander Alvaro Arcos**  
 [GitHub - HenrySTamina](https://github.com/HenrySTamina)
-
