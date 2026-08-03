@@ -189,11 +189,7 @@ function App() {
       setApiError(error.message)
     }
   }
-    
-  async function confirmDeleteTask() {
-    // Aquí permanece el código que ya tienes para eliminar tareas.
-  }
-
+  
   function updatePreferences(newPreferences) {
   const savedPreferences = savePreferences(newPreferences)
 
