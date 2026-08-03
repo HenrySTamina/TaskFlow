@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 
 import Navbar from './components/layout/Navbar'
 import Sidebar from './components/layout/Sidebar'
@@ -17,6 +17,10 @@ import {
   getPreferences,
   savePreferences,
 } from './services/preferences'
+import {
+  applyTheme,
+  subscribeToSystemTheme,
+} from './services/theme'
 import { loadInitialTasks } from './services/taskMigration'
 import SettingsView from './pages/SettingsView'
 
@@ -31,6 +35,30 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [apiError, setApiError] = useState('')
   const [preferences, setPreferences] = useState(getPreferences)
+  const {
+    themeMode,
+    accentColor,
+  } = preferences
+
+  useLayoutEffect(() => {
+    const appearancePreferences = {
+      themeMode,
+      accentColor,
+    }
+
+    applyTheme(appearancePreferences)
+
+    if (themeMode !== 'system') {
+      return undefined
+    }
+
+    return subscribeToSystemTheme(() => {
+      applyTheme(appearancePreferences)
+    })
+  }, [
+    themeMode,
+    accentColor,
+  ])
 
   useEffect(() => {
     let isActive = true
