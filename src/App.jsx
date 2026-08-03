@@ -4,6 +4,7 @@ import Navbar from './components/layout/Navbar'
 import Sidebar from './components/layout/Sidebar'
 import DeleteTaskModal from './components/tasks/DeleteTaskModal'
 import TaskModal from './components/tasks/TaskModal'
+import ApiStatus from './components/ui/ApiStatus'
 import Dashboard from './pages/Dashboard'
 import {
   createTask,
@@ -19,6 +20,8 @@ function App() {
   const [taskToDelete, setTaskToDelete] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [tasks, setTasks] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [apiError, setApiError] = useState('')
 
   useEffect(() => {
     let isActive = true
@@ -29,9 +32,16 @@ function App() {
 
         if (isActive) {
           setTasks(initialTasks)
+          setApiError('')
         }
       } catch (error) {
-        console.error('No se pudieron sincronizar las tareas.', error)
+        if (isActive) {
+          setApiError(error.message)
+        }
+      } finally {
+        if (isActive) {
+          setIsLoading(false)
+        }
       }
     }
 
@@ -41,6 +51,20 @@ function App() {
       isActive = false
     }
   }, [])
+
+  async function retryLoadTasks() {
+    setIsLoading(true)
+    setApiError('')
+
+    try {
+      const refreshedTasks = await loadInitialTasks()
+      setTasks(refreshedTasks)
+    } catch (error) {
+      setApiError(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   function openSidebar() {
     setIsSidebarOpen(true)
@@ -66,6 +90,8 @@ function App() {
   }
 
   async function saveTask(taskData) {
+    setApiError('')
+
     try {
       if (editingTask) {
         const updatedTask = await updateTask(editingTask.id, taskData)
@@ -92,7 +118,7 @@ function App() {
 
       closeTaskModal()
     } catch (error) {
-      console.error('No se pudo guardar la tarea en la API.', error)
+      setApiError(error.message)
     }
   }
 
@@ -106,6 +132,8 @@ function App() {
     const newStatus = selectedTask.status === 'Completada'
       ? 'Pendiente'
       : 'Completada'
+
+    setApiError('')
 
     try {
       const updatedTask = await updateTask(taskId, {
@@ -121,7 +149,7 @@ function App() {
           : task
       )))
     } catch (error) {
-      console.error('No se pudo actualizar el estado de la tarea.', error)
+      setApiError(error.message)
     }
   }
 
@@ -134,22 +162,24 @@ function App() {
   }
 
   async function confirmDeleteTask() {
-  if (!taskToDelete) {
-    return
+    if (!taskToDelete) {
+      return
+    }
+
+    setApiError('')
+
+    try {
+      await deleteTask(taskToDelete.id)
+
+      setTasks((currentTasks) => currentTasks.filter(
+        (task) => task.id !== taskToDelete.id,
+      ))
+
+      setTaskToDelete(null)
+    } catch (error) {
+      setApiError(error.message)
+    }
   }
-
-  try {
-    await deleteTask(taskToDelete.id)
-
-    setTasks((currentTasks) => currentTasks.filter(
-      (task) => task.id !== taskToDelete.id,
-    ))
-
-    setTaskToDelete(null)
-  } catch (error) {
-    console.error('No se pudo eliminar la tarea de la API.', error)
-  }
-}
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -163,6 +193,12 @@ function App() {
           searchTerm={searchTerm}
           onOpenMenu={openSidebar}
           onSearchChange={setSearchTerm}
+        />
+
+        <ApiStatus
+          isLoading={isLoading}
+          errorMessage={apiError}
+          onRetry={retryLoadTasks}
         />
 
         <Dashboard

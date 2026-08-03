@@ -61,9 +61,8 @@ async function synchronizeInitialTasks() {
 
 export function loadInitialTasks() {
   if (!initialTasksPromise) {
-    initialTasksPromise = synchronizeInitialTasks().catch((error) => {
+    initialTasksPromise = synchronizeInitialTasks().finally(() => {
       initialTasksPromise = null
-      throw error
     })
   }
 
