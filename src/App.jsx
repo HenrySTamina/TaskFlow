@@ -13,7 +13,12 @@ import {
   deleteTask,
   updateTask,
 } from './services/taskApi'
+import {
+  getPreferences,
+  savePreferences,
+} from './services/preferences'
 import { loadInitialTasks } from './services/taskMigration'
+import SettingsView from './pages/SettingsView'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -25,6 +30,7 @@ function App() {
   const [tasks, setTasks] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [apiError, setApiError] = useState('')
+  const [preferences, setPreferences] = useState(getPreferences)
 
   useEffect(() => {
     let isActive = true
@@ -188,6 +194,14 @@ function App() {
     // Aquí permanece el código que ya tienes para eliminar tareas.
   }
 
+  function updatePreferences(newPreferences) {
+  const savedPreferences = savePreferences(newPreferences)
+
+  setPreferences(savedPreferences)
+
+  return savedPreferences
+}
+
   function renderActiveView() {
     switch (activeView) {
       case 'calendar':
@@ -208,7 +222,14 @@ function App() {
             onCreateTask={openTaskModal}
           />
         )
-
+      case 'settings':
+        return (
+    <     SettingsView
+            preferences={preferences}
+            onSave={updatePreferences}
+          />
+        )
+        
       default:
         return (
           <Dashboard
