@@ -5,13 +5,20 @@ import Sidebar from './components/layout/Sidebar'
 import DeleteTaskModal from './components/tasks/DeleteTaskModal'
 import TaskModal from './components/tasks/TaskModal'
 import ApiStatus from './components/ui/ApiStatus'
+import CalendarView from './pages/CalendarView'
 import Dashboard from './pages/Dashboard'
+import StatisticsView from './pages/StatisticsView'
 import {
   createTask,
   deleteTask,
   updateTask,
 } from './services/taskApi'
+import {
+  getPreferences,
+  savePreferences,
+} from './services/preferences'
 import { loadInitialTasks } from './services/taskMigration'
+import SettingsView from './pages/SettingsView'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -19,9 +26,11 @@ function App() {
   const [editingTask, setEditingTask] = useState(null)
   const [taskToDelete, setTaskToDelete] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [activeView, setActiveView] = useState('summary')
   const [tasks, setTasks] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [apiError, setApiError] = useState('')
+  const [preferences, setPreferences] = useState(getPreferences)
 
   useEffect(() => {
     let isActive = true
@@ -180,19 +189,88 @@ function App() {
       setApiError(error.message)
     }
   }
+    
+  async function confirmDeleteTask() {
+    // Aquí permanece el código que ya tienes para eliminar tareas.
+  }
+
+  function updatePreferences(newPreferences) {
+  const savedPreferences = savePreferences(newPreferences)
+
+  setPreferences(savedPreferences)
+
+  return savedPreferences
+}
+
+  function renderActiveView() {
+    switch (activeView) {
+      case 'calendar':
+        return (
+          <CalendarView
+            tasks={tasks}
+            searchTerm={searchTerm}
+            onCreateTask={openTaskModal}
+            onEditTask={openEditTask}
+            onToggleTask={toggleTaskStatus}
+          />
+        )
+
+      case 'statistics':
+        return (
+          <StatisticsView
+            tasks={tasks}
+            onCreateTask={openTaskModal}
+          />
+        )
+      case 'settings':
+        return (
+    <     SettingsView
+            preferences={preferences}
+            onSave={updatePreferences}
+          />
+        )
+
+      default:
+        return (
+          <Dashboard
+            viewMode={activeView}
+            tasks={tasks}
+            searchTerm={searchTerm}
+            onCreateTask={openTaskModal}
+            onEditTask={openEditTask}
+            onDeleteTask={requestDeleteTask}
+            onToggleTask={toggleTaskStatus}
+            onSearchChange={setSearchTerm}
+            displayName={preferences.displayName}
+            weeklyGoal={preferences.weeklyGoal}
+          />
+        )
+    }
+  }
 
   return (
     <div className="min-h-screen bg-slate-100">
       <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={closeSidebar}
+  isOpen={isSidebarOpen}
+  activeView={activeView}
+  displayName={preferences.displayName}
+  onClose={closeSidebar}
+  onNavigate={setActiveView}
       />
 
       <div className="lg:pl-72">
         <Navbar
+          activeView={activeView}
+          tasks={tasks}
+          notificationsEnabled={
+          preferences.notificationsEnabled
+          }
           searchTerm={searchTerm}
+          displayName={preferences.displayName}
           onOpenMenu={openSidebar}
           onSearchChange={setSearchTerm}
+          onOpenTask={openEditTask}
+          onOpenSettings={() => setActiveView('settings')}
         />
 
         <ApiStatus
@@ -201,15 +279,7 @@ function App() {
           onRetry={retryLoadTasks}
         />
 
-        <Dashboard
-          tasks={tasks}
-          searchTerm={searchTerm}
-          onCreateTask={openTaskModal}
-          onEditTask={openEditTask}
-          onDeleteTask={requestDeleteTask}
-          onToggleTask={toggleTaskStatus}
-          onSearchChange={setSearchTerm}
-        />
+        {renderActiveView()}
       </div>
 
       {isTaskModalOpen && (
