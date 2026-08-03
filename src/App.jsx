@@ -260,10 +260,17 @@ function App() {
 
       <div className="lg:pl-72">
         <Navbar
+          activeView={activeView}
+          tasks={tasks}
+          notificationsEnabled={
+          preferences.notificationsEnabled
+          }
           searchTerm={searchTerm}
           displayName={preferences.displayName}
           onOpenMenu={openSidebar}
           onSearchChange={setSearchTerm}
+          onOpenTask={openEditTask}
+          onOpenSettings={() => setActiveView('settings')}
         />
 
         <ApiStatus
