@@ -4,20 +4,14 @@ import Navbar from './components/layout/Navbar'
 import Sidebar from './components/layout/Sidebar'
 import DeleteTaskModal from './components/tasks/DeleteTaskModal'
 import TaskModal from './components/tasks/TaskModal'
+import ApiStatus from './components/ui/ApiStatus'
 import Dashboard from './pages/Dashboard'
-
-const TASKS_STORAGE_KEY = 'taskflow_tasks'
-
-function getStoredTasks() {
-  try {
-    const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY)
-    const parsedTasks = storedTasks ? JSON.parse(storedTasks) : []
-
-    return Array.isArray(parsedTasks) ? parsedTasks : []
-  } catch {
-    return []
-  }
-}
+import {
+  createTask,
+  deleteTask,
+  updateTask,
+} from './services/taskApi'
+import { loadInitialTasks } from './services/taskMigration'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -25,11 +19,52 @@ function App() {
   const [editingTask, setEditingTask] = useState(null)
   const [taskToDelete, setTaskToDelete] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [tasks, setTasks] = useState(getStoredTasks)
+  const [tasks, setTasks] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [apiError, setApiError] = useState('')
 
   useEffect(() => {
-    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks))
-  }, [tasks])
+    let isActive = true
+
+    async function synchronizeTasks() {
+      try {
+        const initialTasks = await loadInitialTasks()
+
+        if (isActive) {
+          setTasks(initialTasks)
+          setApiError('')
+        }
+      } catch (error) {
+        if (isActive) {
+          setApiError(error.message)
+        }
+      } finally {
+        if (isActive) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    synchronizeTasks()
+
+    return () => {
+      isActive = false
+    }
+  }, [])
+
+  async function retryLoadTasks() {
+    setIsLoading(true)
+    setApiError('')
+
+    try {
+      const refreshedTasks = await loadInitialTasks()
+      setTasks(refreshedTasks)
+    } catch (error) {
+      setApiError(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   function openSidebar() {
     setIsSidebarOpen(true)
@@ -54,41 +89,68 @@ function App() {
     setIsTaskModalOpen(true)
   }
 
-  function saveTask(taskData) {
-    if (editingTask) {
+  async function saveTask(taskData) {
+    setApiError('')
+
+    try {
+      if (editingTask) {
+        const updatedTask = await updateTask(editingTask.id, taskData)
+
+        setTasks((currentTasks) => currentTasks.map((task) => (
+          task.id === editingTask.id
+            ? {
+                ...updatedTask,
+                project: 'TaskFlow',
+              }
+            : task
+        )))
+      } else {
+        const createdTask = await createTask(taskData)
+
+        setTasks((currentTasks) => [
+          {
+            ...createdTask,
+            project: 'TaskFlow',
+          },
+          ...currentTasks,
+        ])
+      }
+
+      closeTaskModal()
+    } catch (error) {
+      setApiError(error.message)
+    }
+  }
+
+  async function toggleTaskStatus(taskId) {
+    const selectedTask = tasks.find((task) => task.id === taskId)
+
+    if (!selectedTask) {
+      return
+    }
+
+    const newStatus = selectedTask.status === 'Completada'
+      ? 'Pendiente'
+      : 'Completada'
+
+    setApiError('')
+
+    try {
+      const updatedTask = await updateTask(taskId, {
+        status: newStatus,
+      })
+
       setTasks((currentTasks) => currentTasks.map((task) => (
-        task.id === editingTask.id
+        task.id === taskId
           ? {
-              ...task,
-              ...taskData,
-              updatedAt: new Date().toISOString(),
+              ...updatedTask,
+              project: 'TaskFlow',
             }
           : task
       )))
-    } else {
-      const newTask = {
-        ...taskData,
-        id: globalThis.crypto?.randomUUID?.() ?? `${Date.now()}`,
-        project: 'TaskFlow',
-        createdAt: new Date().toISOString(),
-      }
-
-      setTasks((currentTasks) => [newTask, ...currentTasks])
+    } catch (error) {
+      setApiError(error.message)
     }
-
-    closeTaskModal()
-  }
-
-  function toggleTaskStatus(taskId) {
-    setTasks((currentTasks) => currentTasks.map((task) => (
-      task.id === taskId
-        ? {
-            ...task,
-            status: task.status === 'Completada' ? 'Pendiente' : 'Completada',
-            updatedAt: new Date().toISOString(),
-          }
-        : task
-    )))
   }
 
   function requestDeleteTask(task) {
@@ -99,11 +161,24 @@ function App() {
     setTaskToDelete(null)
   }
 
-  function confirmDeleteTask() {
-    setTasks((currentTasks) => currentTasks.filter(
-      (task) => task.id !== taskToDelete.id,
-    ))
-    setTaskToDelete(null)
+  async function confirmDeleteTask() {
+    if (!taskToDelete) {
+      return
+    }
+
+    setApiError('')
+
+    try {
+      await deleteTask(taskToDelete.id)
+
+      setTasks((currentTasks) => currentTasks.filter(
+        (task) => task.id !== taskToDelete.id,
+      ))
+
+      setTaskToDelete(null)
+    } catch (error) {
+      setApiError(error.message)
+    }
   }
 
   return (
@@ -119,6 +194,13 @@ function App() {
           onOpenMenu={openSidebar}
           onSearchChange={setSearchTerm}
         />
+
+        <ApiStatus
+          isLoading={isLoading}
+          errorMessage={apiError}
+          onRetry={retryLoadTasks}
+        />
+
         <Dashboard
           tasks={tasks}
           searchTerm={searchTerm}
