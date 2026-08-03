@@ -5,6 +5,7 @@ import Sidebar from './components/layout/Sidebar'
 import DeleteTaskModal from './components/tasks/DeleteTaskModal'
 import TaskModal from './components/tasks/TaskModal'
 import ApiStatus from './components/ui/ApiStatus'
+import CalendarView from './pages/CalendarView'
 import Dashboard from './pages/Dashboard'
 import {
   createTask,
@@ -204,16 +205,26 @@ function App() {
           onRetry={retryLoadTasks}
         />
 
-        <Dashboard
-  viewMode={activeView}
-  tasks={tasks}
-          searchTerm={searchTerm}
-          onCreateTask={openTaskModal}
-          onEditTask={openEditTask}
-          onDeleteTask={requestDeleteTask}
-          onToggleTask={toggleTaskStatus}
-          onSearchChange={setSearchTerm}
-        />
+        {activeView === 'calendar' ? (
+  <CalendarView
+    tasks={tasks}
+    searchTerm={searchTerm}
+    onCreateTask={openTaskModal}
+    onEditTask={openEditTask}
+    onToggleTask={toggleTaskStatus}
+  />
+) : (
+  <Dashboard
+    viewMode={activeView}
+    tasks={tasks}
+    searchTerm={searchTerm}
+    onCreateTask={openTaskModal}
+    onEditTask={openEditTask}
+    onDeleteTask={requestDeleteTask}
+    onToggleTask={toggleTaskStatus}
+    onSearchChange={setSearchTerm}
+  />
+)}
       </div>
 
       {isTaskModalOpen && (
