@@ -7,6 +7,8 @@ import {
   X,
 } from 'lucide-react'
 
+import { getInitials } from '../../utils/profile'
+
 const menuItems = [
   {
     id: 'summary',
@@ -37,9 +39,10 @@ const menuItems = [
 
 function Sidebar({
   isOpen,
-  activeView,
   onClose,
+  activeView,
   onNavigate,
+  displayName,
 }) {
   return (
     <>
@@ -117,12 +120,12 @@ function Sidebar({
         <div className="border-t border-slate-100 p-4">
           <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-700">
-              HA
+              {getInitials(displayName)}
             </div>
 
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-slate-900">
-                Henry Alvaro
+                {displayName}
               </p>
 
               <p className="truncate text-xs text-slate-500">

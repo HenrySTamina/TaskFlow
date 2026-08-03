@@ -13,6 +13,7 @@ import { useState } from 'react'
 
 import TaskFilters from '../components/tasks/TaskFilters'
 import StatCard from '../components/ui/StatCard'
+import { getFirstName } from '../utils/profile'
 
 function getCurrentDate() {
   return new Intl.DateTimeFormat('es-MX', {
@@ -73,6 +74,8 @@ function Dashboard({
   onDeleteTask,
   onToggleTask,
   onSearchChange,
+  displayName,
+  weeklyGoal,
 }) {
   const [openMenuId, setOpenMenuId] = useState(null)
   const [statusFilter, setStatusFilter] = useState('Todas')
@@ -88,7 +91,13 @@ function Dashboard({
   const completionPercentage = tasks.length
     ? Math.round((completedTasks / tasks.length) * 100)
     : 0
-  const progressDegrees = completionPercentage * 3.6
+  const weeklyProgressPercentage = weeklyGoal
+  ? Math.min(
+      Math.round((completedTasks / weeklyGoal) * 100),
+      100,
+    )
+  : 0
+  const progressDegrees = weeklyProgressPercentage * 3.6
   const normalizedSearch = searchTerm.trim().toLocaleLowerCase('es-MX')
   const hasActiveFilters = Boolean(
     normalizedSearch
@@ -155,7 +164,9 @@ function Dashboard({
 </p>
 
 <h2 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
-  {isTaskView ? 'Mis tareas' : 'Hola, Henry 👋'}
+  {isTaskView
+  ? 'Mis tareas'
+  : `Hola, ${getFirstName(displayName)} 👋`}
 </h2>
 
 <p className="mt-2 text-slate-500">
@@ -370,7 +381,7 @@ function Dashboard({
             >
               <div className="flex h-32 w-32 flex-col items-center justify-center rounded-full bg-white">
                 <span className="text-3xl font-bold text-slate-900">
-                  {completionPercentage}%
+                  {weeklyProgressPercentage}%
                 </span>
 
                 <span className="text-sm text-slate-500">
@@ -397,7 +408,7 @@ function Dashboard({
               </span>
 
               <span className="font-semibold text-slate-800">
-                {tasks.length} tareas
+                {weeklyGoal} tareas
               </span>
             </div>
 

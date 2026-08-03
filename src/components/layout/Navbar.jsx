@@ -1,7 +1,9 @@
 import { Bell, Menu, Search } from 'lucide-react'
+import { getInitials } from '../../utils/profile'
 
 function Navbar({
   searchTerm,
+  displayName,
   onOpenMenu,
   onSearchChange,
 }) {
@@ -52,7 +54,7 @@ function Navbar({
         </button>
 
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">
-          HA
+          {getInitials(displayName)}code src\pages\Dashboard.jsx
         </div>
       </div>
     </header>

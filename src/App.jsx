@@ -229,7 +229,7 @@ function App() {
             onSave={updatePreferences}
           />
         )
-        
+
       default:
         return (
           <Dashboard
@@ -241,6 +241,8 @@ function App() {
             onDeleteTask={requestDeleteTask}
             onToggleTask={toggleTaskStatus}
             onSearchChange={setSearchTerm}
+            displayName={preferences.displayName}
+            weeklyGoal={preferences.weeklyGoal}
           />
         )
     }
@@ -251,6 +253,7 @@ function App() {
       <Sidebar
   isOpen={isSidebarOpen}
   activeView={activeView}
+  displayName={preferences.displayName}
   onClose={closeSidebar}
   onNavigate={setActiveView}
       />
@@ -258,6 +261,7 @@ function App() {
       <div className="lg:pl-72">
         <Navbar
           searchTerm={searchTerm}
+          displayName={preferences.displayName}
           onOpenMenu={openSidebar}
           onSearchChange={setSearchTerm}
         />
