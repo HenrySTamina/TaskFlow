@@ -164,9 +164,16 @@ function Dashboard({
 </p>
 
 <h2 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
-  {isTaskView
-  ? 'Mis tareas'
-  : `Hola, ${getFirstName(displayName)} 👋`}
+  {isTaskView ? (
+    'Mis tareas'
+  ) : (
+    <>
+      Hola, {getFirstName(displayName)}{' '}
+      <span className="taskflow-wave" aria-hidden="true">
+        👋
+      </span>
+    </>
+  )}
 </h2>
 
 <p className="mt-2 text-slate-500">
@@ -179,15 +186,15 @@ function Dashboard({
         <button
           type="button"
           onClick={onCreateTask}
-          className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
+          className="taskflow-interactive flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
         >
-          <Plus size={19} />
+          <Plus className="taskflow-icon" size={19} />
           <span>Nueva tarea</span>
         </button>
       </section>
 
       <section
-  className={`${isTaskView ? 'hidden' : 'grid'} gap-4 sm:grid-cols-2 xl:grid-cols-4`}
+  className={`${isTaskView ? 'hidden' : 'taskflow-task-list grid'} gap-4 sm:grid-cols-2 xl:grid-cols-4`}
 >
         {statistics.map((statistic) => (
           <StatCard
@@ -204,7 +211,7 @@ function Dashboard({
       : 'mt-8 grid gap-6 xl:grid-cols-[1fr_340px]'
   }
 >
-        <article className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <article className="taskflow-card-subtle rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-100 p-5">
             <div>
               <h3 className="font-bold text-slate-900">
@@ -229,24 +236,29 @@ function Dashboard({
           />
 
           {filteredTasks.length ? (
-            <div className="divide-y divide-slate-100">
+            <div className="taskflow-task-list divide-y divide-slate-100">
               {filteredTasks.map((task) => (
                 <div
                   key={task.id}
-                  className="flex flex-col gap-4 p-5 transition hover:bg-slate-50 sm:flex-row sm:items-center"
+                  className={`taskflow-task-row relative flex flex-col gap-4 p-5 transition hover:bg-slate-50 sm:flex-row sm:items-center ${
+                    openMenuId === task.id ? 'z-30' : 'z-0'
+                  }`}
                 >
                   <button
                     type="button"
                     onClick={() => onToggleTask(task.id)}
                     aria-label={`Completar ${task.title}`}
-                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition ${
+                    className={`taskflow-check-button taskflow-interactive flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition ${
                       task.status === 'Completada'
                         ? 'text-emerald-600'
                         : 'border-2 border-slate-300 hover:border-indigo-500'
                     }`}
                   >
                     {task.status === 'Completada' && (
-                      <CheckCircle2 size={23} />
+                      <CheckCircle2
+                        className="taskflow-check-complete"
+                        size={23}
+                      />
                     )}
                   </button>
 
@@ -293,22 +305,25 @@ function Dashboard({
                         )}
                         aria-label={`Opciones de ${task.title}`}
                         aria-expanded={openMenuId === task.id}
-                        className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                        className="taskflow-interactive rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
                       >
-                        <MoreHorizontal size={18} />
+                        <MoreHorizontal
+                          className="taskflow-icon"
+                          size={18}
+                        />
                       </button>
 
                       {openMenuId === task.id && (
-                        <div className="absolute right-0 top-10 z-20 w-40 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl">
+                        <div className="taskflow-menu-enter absolute right-0 top-10 z-20 w-40 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl">
                           <button
                             type="button"
                             onClick={() => {
                               onEditTask(task)
                               setOpenMenuId(null)
                             }}
-                            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                            className="taskflow-interactive flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                           >
-                            <Pencil size={16} />
+                            <Pencil className="taskflow-icon" size={16} />
                             Editar
                           </button>
 
@@ -318,9 +333,9 @@ function Dashboard({
                               onDeleteTask(task)
                               setOpenMenuId(null)
                             }}
-                            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50"
+                            className="taskflow-interactive flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50"
                           >
-                            <Trash2 size={16} />
+                            <Trash2 className="taskflow-icon" size={16} />
                             Eliminar
                           </button>
                         </div>
@@ -331,8 +346,8 @@ function Dashboard({
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center px-5 py-12 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
+            <div className="taskflow-empty-state flex flex-col items-center px-5 py-12 text-center">
+              <div className="taskflow-empty-icon flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
                 {hasActiveFilters
                   ? <SearchX size={26} />
                   : <ClipboardList size={26} />}
@@ -353,7 +368,7 @@ function Dashboard({
               <button
                 type="button"
                 onClick={hasActiveFilters ? clearFilters : onCreateTask}
-                className="mt-5 text-sm font-semibold text-indigo-600 hover:text-indigo-700"
+                className="taskflow-interactive mt-5 rounded-lg px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700"
               >
                 {hasActiveFilters ? 'Limpiar filtros' : 'Crear primera tarea'}
               </button>
@@ -362,7 +377,7 @@ function Dashboard({
         </article>
 
         <article
-  className={`${isTaskView ? 'hidden' : ''} rounded-2xl border border-slate-200 bg-white p-6 shadow-sm`}
+  className={`${isTaskView ? 'hidden' : ''} taskflow-card-subtle rounded-2xl border border-slate-200 bg-white p-6 shadow-sm`}
 >
           <h3 className="font-bold text-slate-900">
             Progreso semanal
@@ -374,7 +389,7 @@ function Dashboard({
 
           <div className="my-7 flex justify-center">
             <div
-              className="relative flex h-44 w-44 items-center justify-center rounded-full"
+              className="taskflow-progress-ring relative flex h-44 w-44 items-center justify-center rounded-full"
               style={{
                 background: `conic-gradient(var(--color-indigo-600) 0deg ${progressDegrees}deg, var(--color-slate-200) ${progressDegrees}deg 360deg)`,
               }}

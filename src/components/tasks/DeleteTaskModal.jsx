@@ -7,7 +7,7 @@ function DeleteTaskModal({ task, onClose, onConfirm }) {
         type="button"
         aria-label="Cancelar eliminación"
         onClick={onClose}
-        className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"
+        className="taskflow-modal-backdrop absolute inset-0 bg-slate-950/50 backdrop-blur-sm"
       />
 
       <section
@@ -15,10 +15,10 @@ function DeleteTaskModal({ task, onClose, onConfirm }) {
         aria-modal="true"
         aria-labelledby="delete-task-title"
         aria-describedby="delete-task-description"
-        className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+        className="taskflow-modal-enter relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
       >
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-red-600">
-          <AlertTriangle size={27} />
+        <div className="taskflow-danger-icon flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-red-600">
+          <AlertTriangle className="taskflow-icon" size={27} />
         </div>
 
         <h2
@@ -40,7 +40,7 @@ function DeleteTaskModal({ task, onClose, onConfirm }) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+            className="taskflow-interactive rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
           >
             Cancelar
           </button>
@@ -48,7 +48,7 @@ function DeleteTaskModal({ task, onClose, onConfirm }) {
           <button
             type="button"
             onClick={onConfirm}
-            className="rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-red-200 transition hover:bg-red-700"
+            className="taskflow-interactive rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-red-200 transition hover:bg-red-700"
           >
             Sí, eliminar
           </button>
@@ -59,3 +59,4 @@ function DeleteTaskModal({ task, onClose, onConfirm }) {
 }
 
 export default DeleteTaskModal
+
