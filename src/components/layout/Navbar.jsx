@@ -62,12 +62,15 @@ function Navbar({
           type="button"
           onClick={onOpenMenu}
           aria-label="Abrir menú lateral"
-          className="rounded-xl border border-slate-200 p-2.5 text-slate-600 transition hover:bg-slate-100 lg:hidden"
+          className="taskflow-interactive rounded-xl border border-slate-200 p-2.5 text-slate-600 transition hover:bg-slate-100 lg:hidden"
         >
-          <Menu size={21} />
+          <Menu className="taskflow-icon" size={21} />
         </button>
 
-        <div>
+        <div
+          key={activeView}
+          className="taskflow-title-swap"
+        >
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
             {viewContent.title}
           </h2>
@@ -80,8 +83,11 @@ function Navbar({
 
       <div className="flex items-center gap-2 sm:gap-3">
         {showSearch && (
-          <label className="order-3 flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 md:order-none md:w-auto">
-            <Search size={18} className="text-slate-400" />
+          <label className="taskflow-search order-3 flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 md:order-none md:w-auto">
+            <Search
+              size={18}
+              className="taskflow-icon text-slate-400"
+            />
 
             <input
               type="search"
@@ -105,12 +111,19 @@ function Navbar({
             }}
             aria-label="Ver notificaciones"
             aria-expanded={isNotificationsOpen}
-            className="relative rounded-xl border border-slate-200 p-2.5 text-slate-600 transition hover:bg-slate-100"
+            className="taskflow-interactive relative rounded-xl border border-slate-200 p-2.5 text-slate-600 transition hover:bg-slate-100"
           >
-            <Bell size={20} />
+            <Bell
+              size={20}
+              className={
+                notificationCount > 0
+                  ? 'taskflow-bell-has-alert'
+                  : 'taskflow-icon'
+              }
+            />
 
             {notificationCount > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+              <span className="taskflow-badge-pop absolute -right-1.5 -top-1.5 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
                 {notificationCount > 9
                   ? '9+'
                   : notificationCount}
@@ -129,7 +142,7 @@ function Navbar({
           )}
         </div>
 
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">
+        <div className="taskflow-avatar flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">
           {getInitials(displayName)}
         </div>
       </div>

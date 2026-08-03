@@ -303,7 +303,12 @@ function App() {
           onRetry={retryLoadTasks}
         />
 
-        {renderActiveView()}
+        <div
+          key={activeView}
+          className="taskflow-view-enter"
+        >
+          {renderActiveView()}
+        </div>
       </div>
 
       {isTaskModalOpen && (
@@ -326,3 +331,4 @@ function App() {
 }
 
 export default App
+
